@@ -83,7 +83,7 @@ export const PassengerWeightForm = ({
                   type="number"
                   value={passengerWeights[index] || ""}
                   onChange={(e) => updatePassengerWeight(index, e.target.value)}
-                  placeholder="Enter weight"
+                  placeholder="150"
                   className="h-12 bg-card"
                 />
               </div>
@@ -96,7 +96,7 @@ export const PassengerWeightForm = ({
                   type="number"
                   value={luggageWeights[index] || ""}
                   onChange={(e) => updateLuggageWeight(index, e.target.value)}
-                  placeholder="Enter weight"
+                  placeholder="25"
                   className="h-12 bg-card"
                 />
               </div>
