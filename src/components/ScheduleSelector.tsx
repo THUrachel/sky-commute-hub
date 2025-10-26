@@ -22,13 +22,15 @@ export const ScheduleSelector = ({
           <Calendar className="h-4 w-4" />
           Date
         </Label>
-        <Input
-          type="date"
-          value={date}
-          onChange={(e) => onDateChange(e.target.value)}
-          min={new Date().toISOString().split("T")[0]}
-          className="h-12 bg-card"
-        />
+        <div className="ml-6">
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => onDateChange(e.target.value)}
+            min={new Date().toISOString().split("T")[0]}
+            className="h-12 bg-card"
+          />
+        </div>
       </div>
 
       <div className="space-y-2">
@@ -36,12 +38,14 @@ export const ScheduleSelector = ({
           <Clock className="h-4 w-4" />
           Time
         </Label>
-        <Input
-          type="time"
-          value={time}
-          onChange={(e) => onTimeChange(e.target.value)}
-          className="h-12 bg-card"
-        />
+        <div className="ml-6">
+          <Input
+            type="time"
+            value={time}
+            onChange={(e) => onTimeChange(e.target.value)}
+            className="h-12 bg-card"
+          />
+        </div>
       </div>
     </div>
   );
