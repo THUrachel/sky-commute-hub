@@ -139,7 +139,7 @@ const Auth = () => {
             <h1 className="text-3xl font-bold">Aeolus</h1>
           </div>
           <p className="text-muted-foreground text-center">
-            Welcome to the future of aerial transport
+            Trusted Transport in the Third Dimension
           </p>
         </div>
 
