@@ -20,6 +20,7 @@ const Index = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pickup, setPickup] = useState("");
+  const [pickupZipcode, setPickupZipcode] = useState("");
   const [destination, setDestination] = useState("");
   const [rideType, setRideType] = useState<"on-demand" | "scheduled">("on-demand");
   const [date, setDate] = useState("");
@@ -208,6 +209,8 @@ const Index = () => {
                   label="Select Pickup Vertiport"
                   value={pickup}
                   onChange={setPickup}
+                  zipcode={pickupZipcode}
+                  onZipcodeChange={setPickupZipcode}
                 />
                 <LocationInput
                   label="Destination"

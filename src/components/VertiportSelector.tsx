@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -7,12 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface VertiportSelectorProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  zipcode: string;
+  onZipcodeChange: (value: string) => void;
 }
 
 interface Vertiport {
@@ -20,78 +23,119 @@ interface Vertiport {
   name: string;
   city: string;
   state: string;
-  coordinates: { lat: number; lng: number };
+  zipcodeRanges: string[];
 }
 
-// Available vertiports across major cities
+// Available vertiports across major cities with their zipcode coverage
 const vertiports: Vertiport[] = [
-  { id: "sfo-downtown", name: "San Francisco Downtown Vertiport", city: "San Francisco", state: "CA", coordinates: { lat: 37.7749, lng: -122.4194 } },
-  { id: "sfo-airport", name: "SFO Airport Vertiport", city: "San Francisco", state: "CA", coordinates: { lat: 37.6213, lng: -122.3790 } },
-  { id: "oak-downtown", name: "Oakland Downtown Vertiport", city: "Oakland", state: "CA", coordinates: { lat: 37.8044, lng: -122.2712 } },
-  { id: "sjc-downtown", name: "San Jose Downtown Vertiport", city: "San Jose", state: "CA", coordinates: { lat: 37.3382, lng: -121.8863 } },
-  { id: "la-downtown", name: "Los Angeles Downtown Vertiport", city: "Los Angeles", state: "CA", coordinates: { lat: 34.0522, lng: -118.2437 } },
-  { id: "la-lax", name: "LAX Airport Vertiport", city: "Los Angeles", state: "CA", coordinates: { lat: 33.9416, lng: -118.4085 } },
-  { id: "sd-downtown", name: "San Diego Downtown Vertiport", city: "San Diego", state: "CA", coordinates: { lat: 32.7157, lng: -117.1611 } },
-  { id: "nyc-manhattan", name: "Manhattan Downtown Vertiport", city: "New York", state: "NY", coordinates: { lat: 40.7128, lng: -74.0060 } },
-  { id: "nyc-jfk", name: "JFK Airport Vertiport", city: "New York", state: "NY", coordinates: { lat: 40.6413, lng: -73.7781 } },
-  { id: "miami-downtown", name: "Miami Downtown Vertiport", city: "Miami", state: "FL", coordinates: { lat: 25.7617, lng: -80.1918 } },
-  { id: "chicago-downtown", name: "Chicago Downtown Vertiport", city: "Chicago", state: "IL", coordinates: { lat: 41.8781, lng: -87.6298 } },
-  { id: "seattle-downtown", name: "Seattle Downtown Vertiport", city: "Seattle", state: "WA", coordinates: { lat: 47.6062, lng: -122.3321 } },
+  { id: "sfo-downtown", name: "San Francisco Downtown Vertiport", city: "San Francisco", state: "CA", zipcodeRanges: ["941"] },
+  { id: "sfo-airport", name: "SFO Airport Vertiport", city: "San Francisco", state: "CA", zipcodeRanges: ["941", "943", "944"] },
+  { id: "oak-downtown", name: "Oakland Downtown Vertiport", city: "Oakland", state: "CA", zipcodeRanges: ["946"] },
+  { id: "sjc-downtown", name: "San Jose Downtown Vertiport", city: "San Jose", state: "CA", zipcodeRanges: ["950", "951", "952", "953", "954", "955"] },
+  { id: "la-downtown", name: "Los Angeles Downtown Vertiport", city: "Los Angeles", state: "CA", zipcodeRanges: ["900", "901", "902"] },
+  { id: "la-lax", name: "LAX Airport Vertiport", city: "Los Angeles", state: "CA", zipcodeRanges: ["900", "901", "902", "903", "904", "905"] },
+  { id: "sd-downtown", name: "San Diego Downtown Vertiport", city: "San Diego", state: "CA", zipcodeRanges: ["919", "920", "921"] },
+  { id: "nyc-manhattan", name: "Manhattan Downtown Vertiport", city: "New York", state: "NY", zipcodeRanges: ["100", "101", "102"] },
+  { id: "nyc-jfk", name: "JFK Airport Vertiport", city: "New York", state: "NY", zipcodeRanges: ["100", "101", "102", "103", "104", "110", "111", "112", "113", "114", "115", "116"] },
+  { id: "miami-downtown", name: "Miami Downtown Vertiport", city: "Miami", state: "FL", zipcodeRanges: ["331", "332", "333"] },
+  { id: "chicago-downtown", name: "Chicago Downtown Vertiport", city: "Chicago", state: "IL", zipcodeRanges: ["606", "607", "608"] },
+  { id: "seattle-downtown", name: "Seattle Downtown Vertiport", city: "Seattle", state: "WA", zipcodeRanges: ["981", "982"] },
 ];
 
-export const VertiportSelector = ({ label, value, onChange }: VertiportSelectorProps) => {
-  const [sortedVertiports, setSortedVertiports] = useState(vertiports);
+// Helper function to get state from zipcode prefix
+const getStateFromZipcode = (zipcode: string): string[] => {
+  const prefix = zipcode.substring(0, 3);
+  
+  // Map zipcode prefixes to states
+  if (prefix >= "900" && prefix <= "961") return ["CA"];
+  if (prefix >= "100" && prefix <= "119") return ["NY"];
+  if (prefix >= "330" && prefix <= "339") return ["FL"];
+  if (prefix >= "600" && prefix <= "629") return ["IL"];
+  if (prefix >= "980" && prefix <= "994") return ["WA"];
+  
+  return [];
+};
 
-  useEffect(() => {
-    // Try to get user's location and sort vertiports by distance
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
-          
-          // Calculate distance and sort
-          const sorted = [...vertiports].sort((a, b) => {
-            const distA = Math.sqrt(
-              Math.pow(a.coordinates.lat - userLat, 2) + 
-              Math.pow(a.coordinates.lng - userLng, 2)
-            );
-            const distB = Math.sqrt(
-              Math.pow(b.coordinates.lat - userLat, 2) + 
-              Math.pow(b.coordinates.lng - userLng, 2)
-            );
-            return distA - distB;
-          });
-          
-          setSortedVertiports(sorted);
-        },
-        () => {
-          // If location access denied, keep default order
-          setSortedVertiports(vertiports);
-        }
-      );
+export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange }: VertiportSelectorProps) => {
+  const [filteredVertiports, setFilteredVertiports] = useState<Vertiport[]>([]);
+
+  // Filter vertiports based on zipcode
+  const filterVertiportsByZipcode = (zip: string) => {
+    if (!zip || zip.length < 3) {
+      setFilteredVertiports([]);
+      return;
     }
-  }, []);
+
+    const prefix = zip.substring(0, 3);
+    const states = getStateFromZipcode(zip);
+    
+    // Filter vertiports by zipcode ranges or state
+    const filtered = vertiports.filter(vertiport => {
+      // Check if zipcode prefix matches any of the vertiport's coverage areas
+      const matchesZipcode = vertiport.zipcodeRanges.some(range => prefix.startsWith(range));
+      // Or if the vertiport is in the same state
+      const matchesState = states.includes(vertiport.state);
+      
+      return matchesZipcode || matchesState;
+    });
+
+    setFilteredVertiports(filtered);
+  };
+
+  const handleZipcodeChange = (newZipcode: string) => {
+    // Only allow numeric input and limit to 5 digits
+    const sanitized = newZipcode.replace(/\D/g, '').slice(0, 5);
+    onZipcodeChange(sanitized);
+    filterVertiportsByZipcode(sanitized);
+    
+    // Clear selected vertiport when zipcode changes
+    if (value && sanitized !== zipcode) {
+      onChange("");
+    }
+  };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <Label className="text-sm font-medium flex items-center gap-2">
         <MapPin className="h-4 w-4" />
         {label}
       </Label>
-      <div className="ml-6">
-        <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-12 bg-card border-border focus:border-primary transition-colors">
-            <SelectValue placeholder="Select a vertiport" />
-          </SelectTrigger>
-          <SelectContent className="z-50">
-            {sortedVertiports.map((vertiport) => (
-              <SelectItem key={vertiport.id} value={vertiport.id}>
-                {vertiport.name} ({vertiport.city}, {vertiport.state})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="ml-6 space-y-3">
+        <div>
+          <Label htmlFor="zipcode" className="text-xs text-muted-foreground mb-1.5 block">
+            Enter Your Zipcode
+          </Label>
+          <Input
+            id="zipcode"
+            type="text"
+            inputMode="numeric"
+            placeholder="e.g., 94102"
+            value={zipcode}
+            onChange={(e) => handleZipcodeChange(e.target.value)}
+            className="h-12 bg-card border-border focus:border-primary transition-colors"
+            maxLength={5}
+          />
+        </div>
+        
+        {zipcode.length >= 3 && (
+          <div>
+            <Label htmlFor="vertiport" className="text-xs text-muted-foreground mb-1.5 block">
+              Select Vertiport
+            </Label>
+            <Select value={value} onValueChange={onChange} disabled={filteredVertiports.length === 0}>
+              <SelectTrigger id="vertiport" className="h-12 bg-card border-border focus:border-primary transition-colors">
+                <SelectValue placeholder={filteredVertiports.length === 0 ? "No vertiports available in this area" : "Select a vertiport"} />
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover">
+                {filteredVertiports.map((vertiport) => (
+                  <SelectItem key={vertiport.id} value={vertiport.id}>
+                    {vertiport.name} ({vertiport.city}, {vertiport.state})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
     </div>
   );
