@@ -120,7 +120,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 pt-12 pb-8 overflow-hidden">
+    <div className="min-h-screen relative flex items-center justify-center p-4 py-12 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -132,7 +132,7 @@ const Auth = () => {
       </div>
 
       {/* Card */}
-      <Card className="w-full max-w-md p-6 md:p-8 shadow-elevated relative z-10 backdrop-blur-sm bg-card/95">
+      <Card className="w-full max-w-md p-6 md:p-8 pb-6 shadow-elevated relative z-10 backdrop-blur-sm bg-card/95">
         <div className="flex flex-col items-center mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Plane className="h-8 w-8 text-primary animate-glow" />
@@ -149,8 +149,8 @@ const Auth = () => {
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-          <div className="min-h-[480px]">
-            <TabsContent value="login">
+          <div className="min-h-[480px] flex flex-col">
+            <TabsContent value="login" className="flex-1">
               <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email</Label>
@@ -182,7 +182,7 @@ const Auth = () => {
               </form>
             </TabsContent>
 
-            <TabsContent value="signup">
+            <TabsContent value="signup" className="flex-1">
               <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="signup-name">Full Name</Label>
