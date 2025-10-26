@@ -27,8 +27,8 @@ const Index = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [passengerCount, setPassengerCount] = useState(1);
-  const [passengerWeights, setPassengerWeights] = useState<string[]>([""]);
-  const [luggageWeights, setLuggageWeights] = useState<string[]>([""]);
+  const [passengerWeights, setPassengerWeights] = useState<string[]>(["150"]);
+  const [luggageWeights, setLuggageWeights] = useState<string[]>(["25"]);
   const [groundTransport, setGroundTransport] = useState<string>("");
   const [dining, setDining] = useState<string[]>([]);
 
@@ -232,15 +232,15 @@ const Index = () => {
                 passengerCount={passengerCount}
                 onPassengerCountChange={(count) => {
                   setPassengerCount(count);
-                  // Resize arrays when passenger count changes
+                  // Resize arrays when passenger count changes with default values
                   setPassengerWeights(prev => {
                     const newWeights = [...prev];
-                    while (newWeights.length < count) newWeights.push("");
+                    while (newWeights.length < count) newWeights.push("150");
                     return newWeights.slice(0, count);
                   });
                   setLuggageWeights(prev => {
                     const newWeights = [...prev];
-                    while (newWeights.length < count) newWeights.push("");
+                    while (newWeights.length < count) newWeights.push("25");
                     return newWeights.slice(0, count);
                   });
                 }}
