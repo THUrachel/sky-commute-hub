@@ -120,7 +120,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 py-12 overflow-hidden">
+    <div className="min-h-screen relative flex items-center justify-center p-4 pt-12 pb-8 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
