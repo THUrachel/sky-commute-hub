@@ -24,6 +24,8 @@ export const GroundTransportSelector = ({
   selectedTransport,
   onTransportChange,
 }: GroundTransportSelectorProps) => {
+  const selectedOption = transportOptions.find(opt => opt.id === selectedTransport);
+  
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium flex items-center gap-2">
@@ -33,7 +35,9 @@ export const GroundTransportSelector = ({
       <div className="ml-6">
         <Select value={selectedTransport || undefined} onValueChange={onTransportChange}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select ground transport option" />
+            <SelectValue placeholder="Select ground transport option">
+              {selectedOption && <span>{selectedOption.name}</span>}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent className="z-50">
             {transportOptions.map((option) => (
