@@ -149,7 +149,7 @@ const Auth = () => {
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-          <div className="min-h-[400px]">
+          <div className="min-h-[480px]">
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
