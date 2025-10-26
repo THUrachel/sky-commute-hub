@@ -69,8 +69,7 @@ export const PassengerWeightForm = ({
             </Label>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground flex items-center gap-2">
-                  <Weight className="h-3 w-3" />
+                <Label className="text-xs text-muted-foreground">
                   Weight (lbs)
                 </Label>
                 <Input
