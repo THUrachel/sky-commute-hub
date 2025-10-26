@@ -70,7 +70,7 @@ export const PassengerWeightForm = ({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground">
-                  Weight (lbs)
+                  Passenger Weight (lbs)
                 </Label>
                 <Input
                   type="number"
@@ -83,7 +83,7 @@ export const PassengerWeightForm = ({
 
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground">
-                  Luggage (lbs)
+                  Luggage Weight (lbs)
                 </Label>
                 <Input
                   type="number"
