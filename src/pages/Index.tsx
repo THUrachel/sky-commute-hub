@@ -67,9 +67,6 @@ const Index = () => {
             <p className="text-xl md:text-2xl text-white/90 font-light">
               Trusted Transport in the Third Dimension
             </p>
-            <p className="text-lg text-white/80">
-              Experience seamless aerial rideshare with zero emissions
-            </p>
           </div>
         </div>
       </div>
