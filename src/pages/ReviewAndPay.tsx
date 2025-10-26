@@ -50,7 +50,7 @@ const ReviewAndPay = () => {
     setIsProcessing(true);
 
     try {
-      const { error } = await supabase.from("bookings").insert({
+      const { data, error } = await supabase.from("bookings").insert({
         user_id: session.user.id,
         pickup_location: bookingData.pickup_location,
         destination: bookingData.destination,
@@ -67,14 +67,14 @@ const ReviewAndPay = () => {
         dining_cost: bookingData.dining_cost,
         total_cost: bookingData.total_cost,
         status: "confirmed",
-      });
+      }).select().single();
 
       if (error) throw error;
 
-      toast.success("Payment confirmed! Your flight is booked.");
+      toast.success("Payment confirmed!");
       
-      // Navigate back to booking page
-      navigate("/book");
+      // Navigate to confirmation page with booking ID
+      navigate(`/order-confirmation?id=${data.id}`);
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Failed to process payment. Please try again.");
