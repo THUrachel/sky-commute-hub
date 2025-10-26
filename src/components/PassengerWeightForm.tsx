@@ -53,7 +53,7 @@ export const PassengerWeightForm = ({
             type="button"
             variant="outline"
             size="icon"
-            onClick={() => onPassengerCountChange(Math.min(4, passengerCount + 1))}
+            onClick={() => onPassengerCountChange(Math.min(3, passengerCount + 1))}
             className="h-10 w-10"
           >
             +
