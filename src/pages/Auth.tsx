@@ -132,7 +132,7 @@ const Auth = () => {
       </div>
 
       {/* Card */}
-      <Card className="w-full max-w-md p-6 md:p-8 pb-6 shadow-elevated relative z-10 backdrop-blur-sm bg-card/95">
+      <Card className="w-full max-w-md p-6 md:p-8 pb-6 shadow-elevated relative z-10 backdrop-blur-sm bg-card/30">
         <div className="flex flex-col items-center mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Plane className="h-8 w-8 text-primary animate-glow" />
