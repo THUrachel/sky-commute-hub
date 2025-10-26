@@ -22,6 +22,7 @@ const Index = () => {
   const [pickup, setPickup] = useState("");
   const [pickupZipcode, setPickupZipcode] = useState("");
   const [destination, setDestination] = useState("");
+  const [destinationZipcode, setDestinationZipcode] = useState("");
   const [rideType, setRideType] = useState<"on-demand" | "scheduled">("on-demand");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -212,11 +213,12 @@ const Index = () => {
                   zipcode={pickupZipcode}
                   onZipcodeChange={setPickupZipcode}
                 />
-                <LocationInput
-                  label="Destination"
-                  placeholder="Enter destination vertiport"
+                <VertiportSelector
+                  label="Select Destination Vertiport"
                   value={destination}
                   onChange={setDestination}
+                  zipcode={destinationZipcode}
+                  onZipcodeChange={setDestinationZipcode}
                 />
               </div>
 
