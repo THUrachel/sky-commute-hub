@@ -14,7 +14,107 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string | null
+          destination: string
+          dining_cost: number | null
+          dining_options: Json | null
+          flight_cost: number
+          ground_transport: string | null
+          ground_transport_cost: number | null
+          id: string
+          luggage_weights: Json
+          passenger_count: number
+          passenger_weights: Json
+          pickup_location: string
+          ride_type: string
+          scheduled_date: string | null
+          scheduled_time: string | null
+          status: string | null
+          total_cost: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          destination: string
+          dining_cost?: number | null
+          dining_options?: Json | null
+          flight_cost: number
+          ground_transport?: string | null
+          ground_transport_cost?: number | null
+          id?: string
+          luggage_weights: Json
+          passenger_count: number
+          passenger_weights: Json
+          pickup_location: string
+          ride_type: string
+          scheduled_date?: string | null
+          scheduled_time?: string | null
+          status?: string | null
+          total_cost: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          destination?: string
+          dining_cost?: number | null
+          dining_options?: Json | null
+          flight_cost?: number
+          ground_transport?: string | null
+          ground_transport_cost?: number | null
+          id?: string
+          luggage_weights?: Json
+          passenger_count?: number
+          passenger_weights?: Json
+          pickup_location?: string
+          ride_type?: string
+          scheduled_date?: string | null
+          scheduled_time?: string | null
+          status?: string | null
+          total_cost?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string
+          full_name: string | null
+          id: string
+          phone_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          id: string
+          phone_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          phone_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
