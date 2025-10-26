@@ -1,93 +1,89 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Plane, MapPin, Calendar, Users, Car, UtensilsCrossed, CheckCircle } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Plane, MapPin, Calendar, Users, Car, UtensilsCrossed, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface BookingDetails {
-  id: string;
+interface BookingData {
   pickup_location: string;
   destination: string;
   ride_type: string;
   scheduled_date: string | null;
   scheduled_time: string | null;
   passenger_count: number;
+  passenger_weights: string[];
+  luggage_weights: string[];
   ground_transport: string;
   dining_options: string[];
   flight_cost: number;
   ground_transport_cost: number;
   dining_cost: number;
   total_cost: number;
-  status: string;
-  created_at: string;
 }
 
-const OrderOverview = () => {
+const ReviewAndPay = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const bookingId = searchParams.get("id");
-  const [booking, setBooking] = useState<BookingDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+  const bookingData = location.state as BookingData | null;
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const fetchBooking = async () => {
-      if (!bookingId) {
-        toast.error("No booking ID provided");
-        navigate("/book");
-        return;
-      }
+    if (!bookingData) {
+      toast.error("No booking data found");
+      navigate("/book");
+    }
+  }, [bookingData, navigate]);
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Please login to view your booking");
-        navigate("/");
-        return;
-      }
+  const handleConfirmPayment = async () => {
+    if (!bookingData) return;
 
-      try {
-        const { data, error } = await supabase
-          .from("bookings")
-          .select("*")
-          .eq("id", bookingId)
-          .eq("user_id", session.user.id)
-          .maybeSingle();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Please login to complete booking");
+      navigate("/");
+      return;
+    }
 
-        if (error) throw error;
+    setIsProcessing(true);
 
-        if (!data) {
-          toast.error("Booking not found");
-          navigate("/book");
-          return;
-        }
+    try {
+      const { error } = await supabase.from("bookings").insert({
+        user_id: session.user.id,
+        pickup_location: bookingData.pickup_location,
+        destination: bookingData.destination,
+        ride_type: bookingData.ride_type,
+        scheduled_date: bookingData.scheduled_date,
+        scheduled_time: bookingData.scheduled_time,
+        passenger_count: bookingData.passenger_count,
+        passenger_weights: bookingData.passenger_weights,
+        luggage_weights: bookingData.luggage_weights,
+        ground_transport: bookingData.ground_transport,
+        dining_options: bookingData.dining_options,
+        flight_cost: bookingData.flight_cost,
+        ground_transport_cost: bookingData.ground_transport_cost,
+        dining_cost: bookingData.dining_cost,
+        total_cost: bookingData.total_cost,
+        status: "confirmed",
+      });
 
-        setBooking(data as BookingDetails);
-      } catch (error) {
-        console.error("Error fetching booking:", error);
-        toast.error("Failed to load booking details");
-        navigate("/book");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      if (error) throw error;
 
-    fetchBooking();
-  }, [bookingId, navigate]);
+      toast.success("Payment confirmed! Your flight is booked.");
+      
+      // Navigate back to booking page
+      navigate("/book");
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Failed to process payment. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-sky flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading booking details...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!booking) {
+  if (!bookingData) {
     return null;
   }
 
@@ -116,29 +112,19 @@ const OrderOverview = () => {
               <h1 className="text-2xl font-bold">Aeolus</h1>
             </div>
             <Button variant="outline" onClick={() => navigate("/book")}>
-              Book Another Flight
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Booking
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Success Message */}
+      {/* Page Title */}
       <div className="container max-w-4xl mx-auto px-4 py-8">
-        <Card className="mb-6 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <CheckCircle className="h-12 w-12 text-green-600" />
-              <div>
-                <h2 className="text-2xl font-bold text-green-900 dark:text-green-100">
-                  Booking Confirmed!
-                </h2>
-                <p className="text-green-700 dark:text-green-300 mt-1">
-                  Your flight has been successfully booked. A confirmation email has been sent to you.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <h2 className="text-3xl font-bold mb-2">Review and Pay</h2>
+        <p className="text-muted-foreground mb-8">
+          Please review your booking details before confirming payment
+        </p>
 
         {/* Booking Details */}
         <Card className="mb-6">
@@ -151,14 +137,14 @@ const OrderOverview = () => {
                 <MapPin className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm text-muted-foreground">Pickup</p>
-                  <p className="font-medium">{booking.pickup_location}</p>
+                  <p className="font-medium">{bookingData.pickup_location}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm text-muted-foreground">Destination</p>
-                  <p className="font-medium">{booking.destination}</p>
+                  <p className="font-medium">{bookingData.destination}</p>
                 </div>
               </div>
             </div>
@@ -170,10 +156,10 @@ const OrderOverview = () => {
                 <Calendar className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm text-muted-foreground">Ride Type</p>
-                  <p className="font-medium capitalize">{booking.ride_type}</p>
-                  {booking.ride_type === "scheduled" && booking.scheduled_date && (
+                  <p className="font-medium capitalize">{bookingData.ride_type}</p>
+                  {bookingData.ride_type === "scheduled" && bookingData.scheduled_date && (
                     <p className="text-sm text-muted-foreground mt-1">
-                      {booking.scheduled_date} at {booking.scheduled_time}
+                      {bookingData.scheduled_date} at {bookingData.scheduled_time}
                     </p>
                   )}
                 </div>
@@ -182,25 +168,25 @@ const OrderOverview = () => {
                 <Users className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm text-muted-foreground">Passengers</p>
-                  <p className="font-medium">{booking.passenger_count} passenger{booking.passenger_count > 1 ? 's' : ''}</p>
+                  <p className="font-medium">{bookingData.passenger_count} passenger{bookingData.passenger_count > 1 ? 's' : ''}</p>
                 </div>
               </div>
             </div>
 
-            {booking.ground_transport && booking.ground_transport !== "none" && (
+            {bookingData.ground_transport && bookingData.ground_transport !== "none" && (
               <>
                 <Separator />
                 <div className="flex items-start gap-3">
                   <Car className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <p className="text-sm text-muted-foreground">Ground Transport</p>
-                    <p className="font-medium">{transportNames[booking.ground_transport]}</p>
+                    <p className="font-medium">{transportNames[bookingData.ground_transport]}</p>
                   </div>
                 </div>
               </>
             )}
 
-            {booking.dining_options && booking.dining_options.length > 0 && (
+            {bookingData.dining_options && bookingData.dining_options.length > 0 && (
               <>
                 <Separator />
                 <div className="flex items-start gap-3">
@@ -208,7 +194,7 @@ const OrderOverview = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Dining Options</p>
                     <ul className="font-medium space-y-1">
-                      {booking.dining_options.map((option) => (
+                      {bookingData.dining_options.map((option) => (
                         <li key={option}>• {diningNames[option]}</li>
                       ))}
                     </ul>
@@ -220,42 +206,52 @@ const OrderOverview = () => {
         </Card>
 
         {/* Payment Summary */}
-        <Card>
+        <Card className="mb-6">
           <CardHeader>
             <CardTitle>Payment Summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Flight Cost</span>
-              <span className="font-medium">${booking.flight_cost.toFixed(2)}</span>
+              <span className="font-medium">${bookingData.flight_cost.toFixed(2)}</span>
             </div>
-            {booking.ground_transport_cost > 0 && (
+            {bookingData.ground_transport_cost > 0 && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Ground Transport</span>
-                <span className="font-medium">${booking.ground_transport_cost.toFixed(2)}</span>
+                <span className="font-medium">${bookingData.ground_transport_cost.toFixed(2)}</span>
               </div>
             )}
-            {booking.dining_cost > 0 && (
+            {bookingData.dining_cost > 0 && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Dining</span>
-                <span className="font-medium">${booking.dining_cost.toFixed(2)}</span>
+                <span className="font-medium">${bookingData.dining_cost.toFixed(2)}</span>
               </div>
             )}
             <Separator />
             <div className="flex justify-between text-lg font-bold">
               <span>Total</span>
-              <span className="text-primary">${booking.total_cost.toFixed(2)}</span>
+              <span className="text-primary">${bookingData.total_cost.toFixed(2)}</span>
             </div>
           </CardContent>
         </Card>
 
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-          <p>Booking ID: {booking.id}</p>
-          <p className="mt-1">Need help? Contact us at support@aeolus.com</p>
+        {/* Confirm Button */}
+        <div className="space-y-4">
+          <Button
+            onClick={handleConfirmPayment}
+            disabled={isProcessing}
+            className="w-full h-14 text-lg font-semibold bg-gradient-primary hover:opacity-90 transition-opacity"
+          >
+            {isProcessing ? "Processing Payment..." : "Confirm and Pay"}
+          </Button>
+          
+          <p className="text-sm text-muted-foreground text-center">
+            By confirming, you agree to our terms and conditions. You'll receive a confirmation email after payment.
+          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default OrderOverview;
+export default ReviewAndPay;

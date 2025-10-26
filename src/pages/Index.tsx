@@ -82,43 +82,29 @@ const Index = () => {
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      const { flightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
-      const totalCost = flightCost + groundTransportCost + diningCost;
-
-      const { data, error } = await supabase.from("bookings").insert({
-        user_id: user.id,
-        pickup_location: pickup,
-        destination: destination,
-        ride_type: rideType,
-        scheduled_date: rideType === "scheduled" ? date : null,
-        scheduled_time: rideType === "scheduled" ? time : null,
-        passenger_count: passengerCount,
-        passenger_weights: passengerWeights,
-        luggage_weights: luggageWeights,
-        ground_transport: groundTransport,
-        dining_options: dining,
-        flight_cost: flightCost,
-        ground_transport_cost: groundTransportCost,
-        dining_cost: diningCost,
-        total_cost: totalCost,
-        status: "confirmed",
-      }).select().single();
-
-      if (error) throw error;
-
-      toast.success("Booking confirmed!");
-      
-      // Navigate to order overview with booking ID
-      navigate(`/order-overview?id=${data.id}`);
-    } catch (error) {
-      console.error("Booking error:", error);
-      toast.error("Failed to complete booking. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    // Navigate to review page with booking data
+    const { flightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
+    const totalCost = flightCost + groundTransportCost + diningCost;
+    
+    const bookingData = {
+      pickup_location: pickup,
+      destination: destination,
+      ride_type: rideType,
+      scheduled_date: rideType === "scheduled" ? date : null,
+      scheduled_time: rideType === "scheduled" ? time : null,
+      passenger_count: passengerCount,
+      passenger_weights: passengerWeights,
+      luggage_weights: luggageWeights,
+      ground_transport: groundTransport,
+      dining_options: dining,
+      flight_cost: flightCost,
+      ground_transport_cost: groundTransportCost,
+      dining_cost: diningCost,
+      total_cost: totalCost,
+    };
+    
+    // Pass data via navigation state
+    navigate("/review-and-pay", { state: bookingData });
   };
 
   const handleLogout = async () => {

@@ -59,7 +59,7 @@ export const PaymentSummary = ({
           disabled={isLoading}
           className="w-full h-12 text-base font-semibold bg-gradient-primary hover:opacity-90 transition-opacity"
         >
-          {isLoading ? "Processing..." : "Confirm Booking"}
+          {isLoading ? "Processing..." : "Review and Pay"}
         </Button>
 
         <p className="text-xs text-muted-foreground text-center">
