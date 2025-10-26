@@ -47,16 +47,17 @@ export const DiningOptionsSelector = ({
                 : "Select dining options"}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
+          <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)] z-50 bg-popover">
             {diningOptions.map((option) => (
               <DropdownMenuCheckboxItem
                 key={option.id}
                 checked={selectedDining.includes(option.id)}
                 onCheckedChange={() => toggleDining(option.id)}
+                className="py-3"
               >
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1 ml-2">
                   <span className="font-medium">{option.name}</span>
-                  <span className="text-sm text-muted-foreground">{option.description}</span>
+                  <span className="text-xs text-muted-foreground">{option.description}</span>
                 </div>
               </DropdownMenuCheckboxItem>
             ))}
