@@ -38,29 +38,31 @@ export const DiningOptionsSelector = ({
         <UtensilsCrossed className="h-4 w-4" />
         Dining Options
       </Label>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="w-full justify-start">
-            {selectedDining.length > 0
-              ? `${selectedDining.length} option${selectedDining.length > 1 ? 's' : ''} selected`
-              : "Select dining options"}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
-          {diningOptions.map((option) => (
-            <DropdownMenuCheckboxItem
-              key={option.id}
-              checked={selectedDining.includes(option.id)}
-              onCheckedChange={() => toggleDining(option.id)}
-            >
-              <div className="flex flex-col">
-                <span className="font-medium">{option.name}</span>
-                <span className="text-sm text-muted-foreground">{option.description}</span>
-              </div>
-            </DropdownMenuCheckboxItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="ml-6">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-full justify-start">
+              {selectedDining.length > 0
+                ? `${selectedDining.length} option${selectedDining.length > 1 ? 's' : ''} selected`
+                : "Select dining options"}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
+            {diningOptions.map((option) => (
+              <DropdownMenuCheckboxItem
+                key={option.id}
+                checked={selectedDining.includes(option.id)}
+                onCheckedChange={() => toggleDining(option.id)}
+              >
+                <div className="flex flex-col">
+                  <span className="font-medium">{option.name}</span>
+                  <span className="text-sm text-muted-foreground">{option.description}</span>
+                </div>
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 };
