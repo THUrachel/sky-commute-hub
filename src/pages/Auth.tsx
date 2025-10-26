@@ -138,7 +138,7 @@ const Auth = () => {
             <Plane className="h-8 w-8 text-primary animate-glow" />
             <h1 className="text-3xl font-bold">Aeolus</h1>
           </div>
-          <p className="text-muted-foreground text-center">
+          <p className="text-primary text-center font-medium">
             Trusted Transport in the Third Dimension
           </p>
         </div>
