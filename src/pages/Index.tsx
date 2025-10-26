@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plane, LogOut, User } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-evtol.jpg";
 import { Button } from "@/components/ui/button";
 import { LocationInput } from "@/components/LocationInput";
@@ -17,22 +17,20 @@ import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Index = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [user, setUser] = useState<SupabaseUser | null>(null);
-  const bookingState = location.state as any;
   const [isLoading, setIsLoading] = useState(false);
-  const [pickup, setPickup] = useState(bookingState?.pickup_location || "");
+  const [pickup, setPickup] = useState("");
   const [pickupZipcode, setPickupZipcode] = useState("");
-  const [destination, setDestination] = useState(bookingState?.destination || "");
+  const [destination, setDestination] = useState("");
   const [destinationZipcode, setDestinationZipcode] = useState("");
-  const [rideType, setRideType] = useState<"on-demand" | "scheduled">(bookingState?.ride_type || "on-demand");
-  const [date, setDate] = useState(bookingState?.scheduled_date || "");
-  const [time, setTime] = useState(bookingState?.scheduled_time || "");
-  const [passengerCount, setPassengerCount] = useState(bookingState?.passenger_count || 1);
-  const [passengerWeights, setPassengerWeights] = useState<string[]>(bookingState?.passenger_weights || ["150"]);
-  const [luggageWeights, setLuggageWeights] = useState<string[]>(bookingState?.luggage_weights || ["25"]);
-  const [groundTransport, setGroundTransport] = useState<string>(bookingState?.ground_transport || "");
-  const [dining, setDining] = useState<string[]>(bookingState?.dining_options || []);
+  const [rideType, setRideType] = useState<"on-demand" | "scheduled">("on-demand");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [passengerCount, setPassengerCount] = useState(1);
+  const [passengerWeights, setPassengerWeights] = useState<string[]>([""]);
+  const [luggageWeights, setLuggageWeights] = useState<string[]>([""]);
+  const [groundTransport, setGroundTransport] = useState<string>("");
+  const [dining, setDining] = useState<string[]>([]);
 
   // Check authentication status and redirect if not logged in
   useEffect(() => {
@@ -234,15 +232,15 @@ const Index = () => {
                 passengerCount={passengerCount}
                 onPassengerCountChange={(count) => {
                   setPassengerCount(count);
-                  // Resize arrays when passenger count changes with default values
+                  // Resize arrays when passenger count changes
                   setPassengerWeights(prev => {
                     const newWeights = [...prev];
-                    while (newWeights.length < count) newWeights.push("150");
+                    while (newWeights.length < count) newWeights.push("");
                     return newWeights.slice(0, count);
                   });
                   setLuggageWeights(prev => {
                     const newWeights = [...prev];
-                    while (newWeights.length < count) newWeights.push("25");
+                    while (newWeights.length < count) newWeights.push("");
                     return newWeights.slice(0, count);
                   });
                 }}

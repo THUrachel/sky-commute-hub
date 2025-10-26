@@ -106,7 +106,7 @@ const ReviewAndPay = () => {
               <Plane className="h-8 w-8 text-primary" />
               <h1 className="text-2xl font-bold">Aeolus</h1>
             </div>
-            <Button variant="outline" onClick={() => navigate("/book", { state: bookingData })}>
+            <Button variant="outline" onClick={() => navigate("/book")}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Booking
             </Button>
