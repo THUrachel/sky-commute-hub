@@ -48,7 +48,7 @@ export const PassengerWeightForm = ({
           >
             -
           </Button>
-          <div className="flex-1 text-center font-semibold text-lg">{passengerCount}</div>
+          <div className="w-16 text-center font-semibold text-lg">{passengerCount}</div>
           <Button
             type="button"
             variant="outline"
