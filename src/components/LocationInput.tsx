@@ -16,12 +16,14 @@ export const LocationInput = ({ label, placeholder, value, onChange }: LocationI
         <MapPin className="h-4 w-4" />
         {label}
       </Label>
-      <Input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="h-12 bg-card border-border focus:border-primary transition-colors"
-      />
+      <div className="ml-6">
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="h-12 bg-card border-border focus:border-primary transition-colors"
+        />
+      </div>
     </div>
   );
 };

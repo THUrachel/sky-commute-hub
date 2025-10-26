@@ -38,7 +38,7 @@ export const PassengerWeightForm = ({
           <Users className="h-4 w-4" />
           Number of Passengers
         </Label>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ml-6">
           <Button
             type="button"
             variant="outline"
@@ -61,9 +61,9 @@ export const PassengerWeightForm = ({
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 ml-6">
         {Array.from({ length: passengerCount }, (_, index) => (
-          <div key={index} className="space-y-2 ml-4">
+          <div key={index} className="space-y-2">
             <Label className="text-sm font-medium">
               Passenger {index + 1}
             </Label>
