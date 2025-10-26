@@ -88,7 +88,7 @@ const Index = () => {
       const { flightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
       const totalCost = flightCost + groundTransportCost + diningCost;
 
-      const { error } = await supabase.from("bookings").insert({
+      const { data, error } = await supabase.from("bookings").insert({
         user_id: user.id,
         pickup_location: pickup,
         destination: destination,
@@ -105,21 +105,14 @@ const Index = () => {
         dining_cost: diningCost,
         total_cost: totalCost,
         status: "confirmed",
-      });
+      }).select().single();
 
       if (error) throw error;
 
-      toast.success("Booking confirmed! You'll receive a confirmation email shortly.");
+      toast.success("Booking confirmed!");
       
-      // Reset form
-      setPickup("");
-      setDestination("");
-      setDate("");
-      setTime("");
-      setPassengerWeights([""]);
-      setLuggageWeights([""]);
-      setGroundTransport("");
-      setDining([]);
+      // Navigate to order overview with booking ID
+      navigate(`/order-overview?id=${data.id}`);
     } catch (error) {
       console.error("Booking error:", error);
       toast.error("Failed to complete booking. Please try again.");
