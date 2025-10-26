@@ -126,23 +126,15 @@ const Index = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      // Sign out from Supabase
-      await supabase.auth.signOut({ scope: 'local' });
-      
-      // Clear local state
-      setUser(null);
-      
-      // Show success message
-      toast.success("Logged out successfully");
-      
-      // Navigate to auth page
-      navigate("/auth", { replace: true });
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Even on error, redirect to auth page
-      navigate("/auth", { replace: true });
-    }
+    // Clear the session locally without waiting for server response
+    await supabase.auth.signOut({ scope: 'local' });
+    
+    // Clear local state immediately
+    setUser(null);
+    
+    // Show success message and redirect
+    toast.success("Logged out successfully");
+    navigate("/auth", { replace: true });
   };
 
   const costs = calculateCosts();
