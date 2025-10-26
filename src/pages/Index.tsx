@@ -126,9 +126,13 @@ const Index = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast.success("Logged out successfully");
-    navigate("/auth");
+    try {
+      await supabase.auth.signOut();
+      toast.success("Logged out successfully");
+      navigate("/auth", { replace: true });
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
   };
 
   const costs = calculateCosts();
