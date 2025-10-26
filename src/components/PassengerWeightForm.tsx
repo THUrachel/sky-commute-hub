@@ -63,7 +63,7 @@ export const PassengerWeightForm = ({
 
       <div className="space-y-4">
         {Array.from({ length: passengerCount }, (_, index) => (
-          <div key={index} className="space-y-2">
+          <div key={index} className="space-y-2 ml-4">
             <Label className="text-sm font-medium">
               Passenger {index + 1}
             </Label>
