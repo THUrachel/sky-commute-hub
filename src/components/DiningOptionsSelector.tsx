@@ -1,6 +1,12 @@
-import { UtensilsCrossed, Check } from "lucide-react";
+import { UtensilsCrossed } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface DiningOptionsSelectorProps {
   selectedDining: string[];
@@ -32,29 +38,29 @@ export const DiningOptionsSelector = ({
         <UtensilsCrossed className="h-4 w-4" />
         Dining Options
       </Label>
-      <div className="grid gap-3">
-        {diningOptions.map((option) => (
-          <Card
-            key={option.id}
-            onClick={() => toggleDining(option.id)}
-            className={`p-4 cursor-pointer transition-all border-2 hover:border-primary ${
-              selectedDining.includes(option.id)
-                ? "border-primary bg-primary/5"
-                : "border-border bg-card"
-            }`}
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="font-medium">{option.name}</div>
-                <div className="text-sm text-muted-foreground">{option.description}</div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="w-full justify-start">
+            {selectedDining.length > 0
+              ? `${selectedDining.length} option${selectedDining.length > 1 ? 's' : ''} selected`
+              : "Select dining options"}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
+          {diningOptions.map((option) => (
+            <DropdownMenuCheckboxItem
+              key={option.id}
+              checked={selectedDining.includes(option.id)}
+              onCheckedChange={() => toggleDining(option.id)}
+            >
+              <div className="flex flex-col">
+                <span className="font-medium">{option.name}</span>
+                <span className="text-sm text-muted-foreground">{option.description}</span>
               </div>
-              {selectedDining.includes(option.id) && (
-                <Check className="h-5 w-5 text-primary flex-shrink-0" />
-              )}
-            </div>
-          </Card>
-        ))}
-      </div>
+            </DropdownMenuCheckboxItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

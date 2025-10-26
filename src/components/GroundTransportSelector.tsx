@@ -1,6 +1,12 @@
-import { Car, Check } from "lucide-react";
+import { Car } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface GroundTransportSelectorProps {
   selectedTransport: string | null;
@@ -24,29 +30,21 @@ export const GroundTransportSelector = ({
         <Car className="h-4 w-4" />
         Ground Transport Partnership
       </Label>
-      <div className="grid gap-3">
-        {transportOptions.map((option) => (
-          <Card
-            key={option.id}
-            onClick={() => onTransportChange(option.id === selectedTransport ? null : option.id)}
-            className={`p-4 cursor-pointer transition-all border-2 hover:border-primary ${
-              selectedTransport === option.id
-                ? "border-primary bg-primary/5"
-                : "border-border bg-card"
-            }`}
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="font-medium">{option.name}</div>
-                <div className="text-sm text-muted-foreground">{option.description}</div>
+      <Select value={selectedTransport || undefined} onValueChange={onTransportChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select ground transport option" />
+        </SelectTrigger>
+        <SelectContent>
+          {transportOptions.map((option) => (
+            <SelectItem key={option.id} value={option.id}>
+              <div className="flex flex-col">
+                <span className="font-medium">{option.name}</span>
+                <span className="text-sm text-muted-foreground">{option.description}</span>
               </div>
-              {selectedTransport === option.id && (
-                <Check className="h-5 w-5 text-primary flex-shrink-0" />
-              )}
-            </div>
-          </Card>
-        ))}
-      </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
