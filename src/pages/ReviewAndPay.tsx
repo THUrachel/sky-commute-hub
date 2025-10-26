@@ -242,7 +242,7 @@ const ReviewAndPay = () => {
             disabled={isProcessing}
             className="w-full h-14 text-lg font-semibold bg-gradient-primary hover:opacity-90 transition-opacity"
           >
-            {isProcessing ? "Processing Payment..." : "Confirm and Pay"}
+            {isProcessing ? "Processing Payment..." : "Complete Purchase"}
           </Button>
           
           <p className="text-sm text-muted-foreground text-center">
