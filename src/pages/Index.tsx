@@ -126,10 +126,13 @@ const Index = () => {
   };
 
   const handleLogout = async () => {
-    // Clear the session locally
-    await supabase.auth.signOut({ scope: 'local' });
+    // Sign out and clear all session data
+    await supabase.auth.signOut();
     
-    // Force redirect to auth page immediately
+    // Clear local state
+    setUser(null);
+    
+    // Force a full page reload to /auth to ensure clean state
     window.location.href = '/auth';
   };
 
