@@ -149,9 +149,9 @@ const Auth = () => {
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-          <div className="flex flex-col">
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
+          <div className="h-[420px] flex flex-col">
+            <TabsContent value="login" className="flex justify-center items-center h-full">
+              <form onSubmit={handleLogin} className="space-y-4 w-full">
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email</Label>
                 <Input
@@ -182,8 +182,8 @@ const Auth = () => {
               </form>
             </TabsContent>
 
-            <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
+            <TabsContent value="signup" className="h-full">
+              <form onSubmit={handleSignup} className="space-y-4 w-full">
               <div className="space-y-2">
                 <Label htmlFor="signup-name">Full Name</Label>
                 <Input
