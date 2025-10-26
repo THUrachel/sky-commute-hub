@@ -50,7 +50,7 @@ const Index = () => {
         <div className="absolute inset-0">
           <img
             src={heroImage}
-            alt="Joby eVTOL Aircraft"
+            alt="Aeolus eVTOL Aircraft"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/40 to-background/95" />
@@ -61,7 +61,7 @@ const Index = () => {
             <div className="inline-flex items-center gap-3 mb-4">
               <Plane className="h-12 w-12 text-accent animate-glow" />
               <h1 className="text-5xl md:text-7xl font-bold text-white">
-                Joby Aviation
+                Aeolus
               </h1>
             </div>
             <p className="text-xl md:text-2xl text-white/90 font-light">
