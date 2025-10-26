@@ -8,6 +8,7 @@ interface PaymentSummaryProps {
   groundTransport: number;
   dining: number;
   onBooking: () => void;
+  isLoading?: boolean;
 }
 
 export const PaymentSummary = ({
@@ -15,6 +16,7 @@ export const PaymentSummary = ({
   groundTransport,
   dining,
   onBooking,
+  isLoading = false,
 }: PaymentSummaryProps) => {
   const total = flightCost + groundTransport + dining;
 
@@ -54,9 +56,10 @@ export const PaymentSummary = ({
 
         <Button
           onClick={onBooking}
+          disabled={isLoading}
           className="w-full h-12 text-base font-semibold bg-gradient-primary hover:opacity-90 transition-opacity"
         >
-          Confirm Booking
+          {isLoading ? "Processing..." : "Confirm Booking"}
         </Button>
 
         <p className="text-xs text-muted-foreground text-center">

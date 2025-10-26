@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { Plane } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plane, LogOut, User } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-evtol.jpg";
+import { Button } from "@/components/ui/button";
 import { LocationInput } from "@/components/LocationInput";
 import { RideTypeSelector } from "@/components/RideTypeSelector";
 import { ScheduleSelector } from "@/components/ScheduleSelector";
@@ -9,8 +11,13 @@ import { PassengerWeightForm } from "@/components/PassengerWeightForm";
 import { GroundTransportSelector } from "@/components/GroundTransportSelector";
 import { DiningOptionsSelector } from "@/components/DiningOptionsSelector";
 import { PaymentSummary } from "@/components/PaymentSummary";
+import { supabase } from "@/integrations/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [rideType, setRideType] = useState<"on-demand" | "scheduled">("on-demand");
@@ -22,6 +29,21 @@ const Index = () => {
   const [groundTransport, setGroundTransport] = useState<string | null>(null);
   const [dining, setDining] = useState<string[]>([]);
 
+  // Check authentication status
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const calculateCosts = () => {
     const baseFlight = 299 * passengerCount;
     const transportCost = groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
@@ -29,7 +51,14 @@ const Index = () => {
     return { flightCost: baseFlight, groundTransport: transportCost, dining: diningCost };
   };
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
+    // Check if user is logged in
+    if (!user) {
+      toast.error("Please login to book a flight");
+      navigate("/auth");
+      return;
+    }
+
     if (!pickup || !destination) {
       toast.error("Please enter pickup and destination locations");
       return;
@@ -38,7 +67,56 @@ const Index = () => {
       toast.error("Please select date and time for scheduled flight");
       return;
     }
-    toast.success("Booking confirmed! You'll receive a confirmation email shortly.");
+
+    setIsLoading(true);
+
+    try {
+      const { flightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
+      const totalCost = flightCost + groundTransportCost + diningCost;
+
+      const { error } = await supabase.from("bookings").insert({
+        user_id: user.id,
+        pickup_location: pickup,
+        destination: destination,
+        ride_type: rideType,
+        scheduled_date: rideType === "scheduled" ? date : null,
+        scheduled_time: rideType === "scheduled" ? time : null,
+        passenger_count: passengerCount,
+        passenger_weights: passengerWeights,
+        luggage_weights: luggageWeights,
+        ground_transport: groundTransport,
+        dining_options: dining,
+        flight_cost: flightCost,
+        ground_transport_cost: groundTransportCost,
+        dining_cost: diningCost,
+        total_cost: totalCost,
+        status: "confirmed",
+      });
+
+      if (error) throw error;
+
+      toast.success("Booking confirmed! You'll receive a confirmation email shortly.");
+      
+      // Reset form
+      setPickup("");
+      setDestination("");
+      setDate("");
+      setTime("");
+      setPassengerWeights([""]);
+      setLuggageWeights([""]);
+      setGroundTransport(null);
+      setDining([]);
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error("Failed to complete booking. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Logged out successfully");
   };
 
   const costs = calculateCosts();
@@ -56,6 +134,37 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/40 to-background/95" />
         </div>
         
+        {/* Auth buttons in top right */}
+        <div className="absolute top-6 right-6 z-20">
+          {user ? (
+            <div className="flex items-center gap-3">
+              <div className="text-white text-sm bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>{user.email}</span>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleLogout}
+                className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate("/auth")}
+              className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+            >
+              <User className="h-4 w-4 mr-2" />
+              Login / Sign Up
+            </Button>
+          )}
+        </div>
+
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="max-w-4xl mx-auto space-y-6 animate-float">
             <div className="inline-flex items-center gap-3 mb-4">
@@ -147,6 +256,7 @@ const Index = () => {
                 groundTransport={costs.groundTransport}
                 dining={costs.dining}
                 onBooking={handleBooking}
+                isLoading={isLoading}
               />
             </div>
           </div>
