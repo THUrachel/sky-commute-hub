@@ -44,7 +44,7 @@ const ReviewAndPay = () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       toast.error("Please login to complete booking");
-      navigate("/");
+      navigate("/auth");
       return;
     }
 

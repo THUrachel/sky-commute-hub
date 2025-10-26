@@ -38,7 +38,7 @@ const Index = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error("Please login to access the booking page");
-        navigate("/");
+        navigate("/auth");
         return;
       }
       setUser(session.user);
@@ -49,7 +49,7 @@ const Index = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (!session) {
-          navigate("/");
+          navigate("/auth");
         }
         setUser(session?.user ?? null);
       }
@@ -87,7 +87,7 @@ const Index = () => {
     // Check if user is logged in
     if (!user) {
       toast.error("Please login to book a flight");
-      navigate("/");
+      navigate("/auth");
       return;
     }
 
@@ -128,7 +128,7 @@ const Index = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success("Logged out successfully");
-    navigate("/");
+    navigate("/auth");
   };
 
   const costs = calculateCosts();
@@ -168,7 +168,7 @@ const Index = () => {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/auth")}
               className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
             >
               <User className="h-4 w-4 mr-2" />
