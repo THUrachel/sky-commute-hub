@@ -35,12 +35,12 @@ export const GroundTransportSelector = ({
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select ground transport option" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-50">
             {transportOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                <div className="flex flex-col">
+              <SelectItem key={option.id} value={option.id} className="py-3">
+                <div className="flex flex-col gap-1">
                   <span className="font-medium">{option.name}</span>
-                  <span className="text-sm text-muted-foreground">{option.description}</span>
+                  <span className="text-xs text-muted-foreground">{option.description}</span>
                 </div>
               </SelectItem>
             ))}
