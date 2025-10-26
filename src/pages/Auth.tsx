@@ -120,15 +120,15 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 py-12">
+    <div className="min-h-screen relative flex items-center justify-center p-4 py-12 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
           alt="Aeolus eVTOL Aircraft"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/40 to-background/95" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/50 to-background/90" />
       </div>
 
       {/* Card */}
