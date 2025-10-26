@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-evtol.jpg";
 import { Button } from "@/components/ui/button";
 import { LocationInput } from "@/components/LocationInput";
+import { VertiportSelector } from "@/components/VertiportSelector";
 import { RideTypeSelector } from "@/components/RideTypeSelector";
 import { ScheduleSelector } from "@/components/ScheduleSelector";
 import { PassengerWeightForm } from "@/components/PassengerWeightForm";
@@ -203,9 +204,8 @@ const Index = () => {
               <RideTypeSelector value={rideType} onChange={setRideType} />
 
               <div className="grid md:grid-cols-2 gap-4">
-                <LocationInput
-                  label="Pickup Location"
-                  placeholder="Enter pickup vertiport"
+                <VertiportSelector
+                  label="Select Pickup Vertiport"
                   value={pickup}
                   onChange={setPickup}
                 />
