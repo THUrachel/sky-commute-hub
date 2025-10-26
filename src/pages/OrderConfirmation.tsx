@@ -93,20 +93,13 @@ const OrderConfirmation = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+          <div className="flex justify-center pt-8">
             <Button
               size="lg"
               onClick={() => navigate("/book")}
               className="bg-gradient-primary hover:opacity-90 transition-opacity"
             >
               Book Another Flight
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => navigate("/book")}
-            >
-              Return to Home
             </Button>
           </div>
         </div>
