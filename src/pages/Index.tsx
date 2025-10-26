@@ -126,14 +126,22 @@ const Index = () => {
   };
 
   const handleLogout = async () => {
-    // Sign out and clear all session data
+    // Sign out from Supabase
     await supabase.auth.signOut();
+    
+    // Manually clear any remaining auth data from localStorage
+    localStorage.removeItem('sb-zncnvilkgpoolkcycsjd-auth-token');
     
     // Clear local state
     setUser(null);
     
-    // Force a full page reload to /auth to ensure clean state
-    window.location.href = '/auth';
+    // Show success and navigate
+    toast.success("Logged out successfully");
+    
+    // Use setTimeout to ensure state is cleared before navigation
+    setTimeout(() => {
+      navigate("/auth", { replace: true });
+    }, 100);
   };
 
   const costs = calculateCosts();
