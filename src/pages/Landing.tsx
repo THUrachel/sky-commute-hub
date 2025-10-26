@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plane, ArrowRight, Clock, Shield, TrendingUp, Package, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/landing-hero.jpg";
 import manufacturingImage from "@/assets/manufacturing-scenario.jpg";
 import retailImage from "@/assets/retail-scenario.jpg";
@@ -9,6 +10,25 @@ import retailImage from "@/assets/retail-scenario.jpg";
 const Landing = () => {
   const navigate = useNavigate();
   const [hoveredScenario, setHoveredScenario] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleNavigateToBooking = () => {
+    navigate(isLoggedIn ? "/book" : "/auth");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,7 +47,7 @@ const Landing = () => {
               <a href="#scenarios" className="text-muted-foreground hover:text-foreground transition-colors">
                 Use Cases
               </a>
-              <Button onClick={() => navigate("/auth")} className="bg-gradient-primary">
+              <Button onClick={handleNavigateToBooking} className="bg-gradient-primary">
                 Book Now
               </Button>
             </div>
@@ -57,7 +77,7 @@ const Landing = () => {
           </p>
           <Button
             size="lg"
-            onClick={() => navigate("/auth")}
+            onClick={handleNavigateToBooking}
             className="bg-gradient-primary text-lg h-14 px-8 animate-fade-in hover:scale-105 transition-transform"
           >
             Get Started
@@ -215,7 +235,7 @@ const Landing = () => {
                   </li>
                 </ul>
                 <Button 
-                  onClick={() => navigate("/auth")}
+                  onClick={handleNavigateToBooking}
                   className="w-fit"
                 >
                   Learn More
@@ -265,7 +285,7 @@ const Landing = () => {
                   </li>
                 </ul>
                 <Button 
-                  onClick={() => navigate("/auth")}
+                  onClick={handleNavigateToBooking}
                   className="w-fit"
                 >
                   Learn More
@@ -299,7 +319,7 @@ const Landing = () => {
             </p>
             <Button
               size="lg"
-              onClick={() => navigate("/auth")}
+              onClick={handleNavigateToBooking}
               className="bg-gradient-primary text-lg h-14 px-8 hover:scale-105 transition-transform"
             >
               Book Your First Flight
