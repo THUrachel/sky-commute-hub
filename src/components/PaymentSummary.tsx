@@ -31,17 +31,31 @@ export const PaymentSummary = ({
         </div>
 
         <div className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Flight</span>
-              {passengerCount > 1 && (
-                <span className="text-xs text-muted-foreground/70">
-                  {passengerCount} passengers × ${(flightCost / passengerCount).toFixed(2)}
-                </span>
-              )}
+          {passengerCount === 1 ? (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Flight (1 passenger)</span>
+              <span className="font-medium">${flightCost.toFixed(2)}</span>
             </div>
-            <span className="font-medium">${flightCost.toFixed(2)}</span>
-          </div>
+          ) : (
+            <>
+              {Array.from({ length: passengerCount }, (_, i) => {
+                let price = 299;
+                if (i === 1) price = 249;
+                else if (i === 2) price = 199;
+                else if (i >= 3) price = 149;
+                
+                return (
+                  <div key={i} className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      Passenger {i + 1}
+                      {i > 0 && <span className="text-xs ml-1 text-primary">(Discounted)</span>}
+                    </span>
+                    <span className="font-medium">${price.toFixed(2)}</span>
+                  </div>
+                );
+              })}
+            </>
+          )}
           {groundTransport > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Ground Transport</span>

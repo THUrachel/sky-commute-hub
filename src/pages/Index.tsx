@@ -59,13 +59,28 @@ const Index = () => {
   }, [navigate]);
 
   const calculateCosts = () => {
-    const baseFlight = 299 * passengerCount;
+    // Progressive discount pricing: 1st passenger full price, subsequent passengers get discounts
+    const basePricePerPassenger = 299;
+    let flightCost = 0;
+    
+    for (let i = 1; i <= passengerCount; i++) {
+      if (i === 1) {
+        flightCost += basePricePerPassenger; // Full price
+      } else if (i === 2) {
+        flightCost += 249; // $50 discount
+      } else if (i === 3) {
+        flightCost += 199; // $100 discount
+      } else {
+        flightCost += 149; // $150 discount for 4th+ passengers
+      }
+    }
+    
     const transportCost = !groundTransport || groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
     const diningCost = dining.reduce((total, diningId) => {
       const option = diningOptions.find(opt => opt.id === diningId);
       return total + (option?.price || 0);
     }, 0);
-    return { flightCost: baseFlight, groundTransport: transportCost, dining: diningCost };
+    return { flightCost, groundTransport: transportCost, dining: diningCost };
   };
 
   const handleBooking = async () => {
