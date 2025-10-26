@@ -6,20 +6,31 @@ import { Button } from "@/components/ui/button";
 interface PassengerWeightFormProps {
   passengerCount: number;
   onPassengerCountChange: (count: number) => void;
-  passengerWeight: string;
-  onPassengerWeightChange: (weight: string) => void;
-  luggageWeight: string;
-  onLuggageWeightChange: (weight: string) => void;
+  passengerWeights: string[];
+  onPassengerWeightsChange: (weights: string[]) => void;
+  luggageWeights: string[];
+  onLuggageWeightsChange: (weights: string[]) => void;
 }
 
 export const PassengerWeightForm = ({
   passengerCount,
   onPassengerCountChange,
-  passengerWeight,
-  onPassengerWeightChange,
-  luggageWeight,
-  onLuggageWeightChange,
+  passengerWeights,
+  onPassengerWeightsChange,
+  luggageWeights,
+  onLuggageWeightsChange,
 }: PassengerWeightFormProps) => {
+  const updatePassengerWeight = (index: number, value: string) => {
+    const newWeights = [...passengerWeights];
+    newWeights[index] = value;
+    onPassengerWeightsChange(newWeights);
+  };
+
+  const updateLuggageWeight = (index: number, value: string) => {
+    const newWeights = [...luggageWeights];
+    newWeights[index] = value;
+    onLuggageWeightsChange(newWeights);
+  };
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -50,31 +61,42 @@ export const PassengerWeightForm = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label className="text-sm font-medium flex items-center gap-2">
-            <Weight className="h-4 w-4" />
-            Passenger Weight (lbs)
-          </Label>
-          <Input
-            type="number"
-            value={passengerWeight}
-            onChange={(e) => onPassengerWeightChange(e.target.value)}
-            placeholder="Per person"
-            className="h-12 bg-card"
-          />
-        </div>
+      <div className="space-y-4">
+        {Array.from({ length: passengerCount }, (_, index) => (
+          <div key={index} className="space-y-2">
+            <Label className="text-sm font-medium">
+              Passenger {index + 1}
+            </Label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground flex items-center gap-2">
+                  <Weight className="h-3 w-3" />
+                  Weight (lbs)
+                </Label>
+                <Input
+                  type="number"
+                  value={passengerWeights[index] || ""}
+                  onChange={(e) => updatePassengerWeight(index, e.target.value)}
+                  placeholder="Enter weight"
+                  className="h-12 bg-card"
+                />
+              </div>
 
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Luggage Weight (lbs)</Label>
-          <Input
-            type="number"
-            value={luggageWeight}
-            onChange={(e) => onLuggageWeightChange(e.target.value)}
-            placeholder="Per person"
-            className="h-12 bg-card"
-          />
-        </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">
+                  Luggage (lbs)
+                </Label>
+                <Input
+                  type="number"
+                  value={luggageWeights[index] || ""}
+                  onChange={(e) => updateLuggageWeight(index, e.target.value)}
+                  placeholder="Enter weight"
+                  className="h-12 bg-card"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
