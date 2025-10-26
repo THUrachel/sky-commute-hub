@@ -29,20 +29,31 @@ const Index = () => {
   const [groundTransport, setGroundTransport] = useState<string | null>(null);
   const [dining, setDining] = useState<string[]>([]);
 
-  // Check authentication status
+  // Check authentication status and redirect if not logged in
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("Please login to access the booking page");
+        navigate("/");
+        return;
+      }
+      setUser(session.user);
+    };
+
+    checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        if (!session) {
+          navigate("/");
+        }
         setUser(session?.user ?? null);
       }
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const calculateCosts = () => {
     const baseFlight = 299 * passengerCount;
@@ -55,7 +66,7 @@ const Index = () => {
     // Check if user is logged in
     if (!user) {
       toast.error("Please login to book a flight");
-      navigate("/auth");
+      navigate("/");
       return;
     }
 
@@ -117,6 +128,7 @@ const Index = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success("Logged out successfully");
+    navigate("/");
   };
 
   const costs = calculateCosts();
@@ -156,7 +168,7 @@ const Index = () => {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/")}
               className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
             >
               <User className="h-4 w-4 mr-2" />

@@ -28,7 +28,7 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate("/");
+        navigate("/book");
       }
     };
     checkUser();
@@ -55,7 +55,7 @@ const Auth = () => {
 
       if (data.session) {
         toast.success("Welcome back!");
-        navigate("/");
+        navigate("/book");
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -109,7 +109,7 @@ const Auth = () => {
           .eq("id", data.user!.id);
 
         toast.success("Account created successfully!");
-        navigate("/");
+        navigate("/book");
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
