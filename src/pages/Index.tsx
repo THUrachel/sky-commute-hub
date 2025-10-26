@@ -126,15 +126,11 @@ const Index = () => {
   };
 
   const handleLogout = async () => {
-    // Clear the session locally without waiting for server response
+    // Clear the session locally
     await supabase.auth.signOut({ scope: 'local' });
     
-    // Clear local state immediately
-    setUser(null);
-    
-    // Show success message and redirect
-    toast.success("Logged out successfully");
-    navigate("/auth", { replace: true });
+    // Force redirect to auth page immediately
+    window.location.href = '/auth';
   };
 
   const costs = calculateCosts();
