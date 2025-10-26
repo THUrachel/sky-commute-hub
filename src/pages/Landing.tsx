@@ -27,7 +27,7 @@ const Landing = () => {
               <a href="#scenarios" className="text-muted-foreground hover:text-foreground transition-colors">
                 Use Cases
               </a>
-              <Button onClick={() => navigate("/book")} className="bg-gradient-primary">
+              <Button onClick={() => navigate("/auth")} className="bg-gradient-primary">
                 Book Now
               </Button>
             </div>
@@ -57,7 +57,7 @@ const Landing = () => {
           </p>
           <Button
             size="lg"
-            onClick={() => navigate("/book")}
+            onClick={() => navigate("/auth")}
             className="bg-gradient-primary text-lg h-14 px-8 animate-fade-in hover:scale-105 transition-transform"
           >
             Get Started
@@ -215,7 +215,7 @@ const Landing = () => {
                   </li>
                 </ul>
                 <Button 
-                  onClick={() => navigate("/book")}
+                  onClick={() => navigate("/auth")}
                   className="w-fit"
                 >
                   Learn More
@@ -265,7 +265,7 @@ const Landing = () => {
                   </li>
                 </ul>
                 <Button 
-                  onClick={() => navigate("/book")}
+                  onClick={() => navigate("/auth")}
                   className="w-fit"
                 >
                   Learn More
@@ -299,7 +299,7 @@ const Landing = () => {
             </p>
             <Button
               size="lg"
-              onClick={() => navigate("/book")}
+              onClick={() => navigate("/auth")}
               className="bg-gradient-primary text-lg h-14 px-8 hover:scale-105 transition-transform"
             >
               Book Your First Flight
