@@ -12,7 +12,10 @@ interface LocationInputProps {
 export const LocationInput = ({ label, placeholder, value, onChange }: LocationInputProps) => {
   return (
     <div className="space-y-2">
-      <Label className="text-sm font-medium">{label}</Label>
+      <Label className="text-sm font-medium flex items-center gap-2">
+        <MapPin className="h-4 w-4" />
+        {label}
+      </Label>
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
