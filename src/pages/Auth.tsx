@@ -150,8 +150,8 @@ const Auth = () => {
           </TabsList>
 
           <div className="h-[420px] flex flex-col">
-            <TabsContent value="login" className="flex justify-center items-center h-full">
-              <form onSubmit={handleLogin} className="space-y-4 w-full">
+            <TabsContent value="login" className="flex-1 overflow-y-auto">
+              <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email</Label>
                 <Input
@@ -182,8 +182,8 @@ const Auth = () => {
               </form>
             </TabsContent>
 
-            <TabsContent value="signup" className="h-full">
-              <form onSubmit={handleSignup} className="space-y-4 w-full">
+            <TabsContent value="signup" className="flex-1 overflow-y-auto">
+              <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="signup-name">Full Name</Label>
                 <Input
