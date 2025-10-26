@@ -75,7 +75,7 @@ const Index = () => {
       </div>
 
       {/* Booking Section */}
-      <div className="container max-w-7xl mx-auto px-4 -mt-20 pb-20">
+      <div className="container max-w-7xl mx-auto px-4 -mt-20 pb-20 relative z-10">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Booking Form */}
           <div className="lg:col-span-2">
