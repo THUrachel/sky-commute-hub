@@ -29,7 +29,7 @@ const Index = () => {
   const [passengerCount, setPassengerCount] = useState(1);
   const [passengerWeights, setPassengerWeights] = useState<string[]>([""]);
   const [luggageWeights, setLuggageWeights] = useState<string[]>([""]);
-  const [groundTransport, setGroundTransport] = useState<string | null>(null);
+  const [groundTransport, setGroundTransport] = useState<string>("");
   const [dining, setDining] = useState<string[]>([]);
 
   // Check authentication status and redirect if not logged in
@@ -60,7 +60,7 @@ const Index = () => {
 
   const calculateCosts = () => {
     const baseFlight = 299 * passengerCount;
-    const transportCost = groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
+    const transportCost = !groundTransport || groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
     const diningCost = dining.length * 45;
     return { flightCost: baseFlight, groundTransport: transportCost, dining: diningCost };
   };
@@ -118,7 +118,7 @@ const Index = () => {
       setTime("");
       setPassengerWeights([""]);
       setLuggageWeights([""]);
-      setGroundTransport(null);
+      setGroundTransport("");
       setDining([]);
     } catch (error) {
       console.error("Booking error:", error);

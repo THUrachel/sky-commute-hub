@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/select";
 
 interface GroundTransportSelectorProps {
-  selectedTransport: string | null;
-  onTransportChange: (transport: string | null) => void;
+  selectedTransport: string;
+  onTransportChange: (transport: string) => void;
 }
 
 const transportOptions = [
@@ -33,7 +33,7 @@ export const GroundTransportSelector = ({
         Ground Transport Partnership
       </Label>
       <div className="ml-6">
-        <Select value={selectedTransport || undefined} onValueChange={onTransportChange}>
+        <Select value={selectedTransport} onValueChange={onTransportChange}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select ground transport option">
               {selectedOption && <span>{selectedOption.name}</span>}
