@@ -10,7 +10,7 @@ import { RideTypeSelector } from "@/components/RideTypeSelector";
 import { ScheduleSelector } from "@/components/ScheduleSelector";
 import { PassengerWeightForm } from "@/components/PassengerWeightForm";
 import { GroundTransportSelector } from "@/components/GroundTransportSelector";
-import { DiningOptionsSelector } from "@/components/DiningOptionsSelector";
+import { DiningOptionsSelector, diningOptions } from "@/components/DiningOptionsSelector";
 import { PaymentSummary } from "@/components/PaymentSummary";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -61,7 +61,10 @@ const Index = () => {
   const calculateCosts = () => {
     const baseFlight = 299 * passengerCount;
     const transportCost = !groundTransport || groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
-    const diningCost = dining.length * 45;
+    const diningCost = dining.reduce((total, diningId) => {
+      const option = diningOptions.find(opt => opt.id === diningId);
+      return total + (option?.price || 0);
+    }, 0);
     return { flightCost: baseFlight, groundTransport: transportCost, dining: diningCost };
   };
 

@@ -13,11 +13,11 @@ interface DiningOptionsSelectorProps {
   onDiningChange: (dining: string[]) => void;
 }
 
-const diningOptions = [
-  { id: "beverages", name: "Premium Beverages", description: "Champagne, wine, and soft drinks" },
-  { id: "snacks", name: "Gourmet Snacks", description: "Artisan cheese, crackers, and fruits" },
-  { id: "meal", name: "Full Meal Service", description: "Chef-prepared meal for your journey" },
-  { id: "dietary", name: "Special Dietary Needs", description: "Vegetarian, vegan, gluten-free options" },
+export const diningOptions = [
+  { id: "lounge", name: "Vertiport Lounge Access", description: "Comfortable waiting area with refreshments", price: 35 },
+  { id: "premium", name: "Premium Dining", description: "Gourmet meal before departure", price: 65 },
+  { id: "inflight", name: "In-Flight Service", description: "Snacks and beverages during flight", price: 25 },
+  { id: "sky-bar", name: "Sky Bar Experience", description: "Exclusive rooftop bar access", price: 50 },
 ];
 
 export const DiningOptionsSelector = ({
@@ -55,8 +55,11 @@ export const DiningOptionsSelector = ({
                 onCheckedChange={() => toggleDining(option.id)}
                 className="py-3"
               >
-                <div className="flex flex-col gap-1 ml-2">
-                  <span className="font-medium">{option.name}</span>
+                <div className="flex flex-col gap-1 ml-2 flex-1">
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="font-medium">{option.name}</span>
+                    <span className="font-semibold text-primary whitespace-nowrap">${option.price}</span>
+                  </div>
                   <span className="text-xs text-muted-foreground">{option.description}</span>
                 </div>
               </DropdownMenuCheckboxItem>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { diningOptions } from "@/components/DiningOptionsSelector";
 
 interface BookingData {
   pickup_location: string;
@@ -94,12 +95,6 @@ const ReviewAndPay = () => {
     electric: "Electric Vehicle",
   };
 
-  const diningNames: { [key: string]: string } = {
-    beverages: "Premium Beverages",
-    snacks: "Gourmet Snacks",
-    meal: "Full Meal Service",
-    dietary: "Special Dietary Needs",
-  };
 
   return (
     <div className="min-h-screen bg-gradient-sky">
@@ -194,9 +189,15 @@ const ReviewAndPay = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Dining Options</p>
                     <ul className="font-medium space-y-1">
-                      {bookingData.dining_options.map((option) => (
-                        <li key={option}>• {diningNames[option]}</li>
-                      ))}
+                      {bookingData.dining_options.map((optionId) => {
+                        const option = diningOptions.find(opt => opt.id === optionId);
+                        return option ? (
+                          <li key={optionId} className="flex justify-between">
+                            <span>• {option.name}</span>
+                            <span className="text-primary ml-4">${option.price}</span>
+                          </li>
+                        ) : null;
+                      })}
                     </ul>
                   </div>
                 </div>
