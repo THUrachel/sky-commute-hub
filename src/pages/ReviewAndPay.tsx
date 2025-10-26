@@ -192,10 +192,7 @@ const ReviewAndPay = () => {
                       {bookingData.dining_options.map((optionId) => {
                         const option = diningOptions.find(opt => opt.id === optionId);
                         return option ? (
-                          <li key={optionId} className="flex justify-between">
-                            <span>• {option.name}</span>
-                            <span className="text-primary ml-4">${option.price}</span>
-                          </li>
+                          <li key={optionId}>• {option.name}</li>
                         ) : null;
                       })}
                     </ul>
