@@ -7,6 +7,7 @@ interface PaymentSummaryProps {
   flightCost: number;
   groundTransport: number;
   dining: number;
+  passengerCount: number;
   onBooking: () => void;
   isLoading?: boolean;
 }
@@ -15,6 +16,7 @@ export const PaymentSummary = ({
   flightCost,
   groundTransport,
   dining,
+  passengerCount,
   onBooking,
   isLoading = false,
 }: PaymentSummaryProps) => {
@@ -30,7 +32,14 @@ export const PaymentSummary = ({
 
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Flight</span>
+            <div className="flex flex-col">
+              <span className="text-muted-foreground">Flight</span>
+              {passengerCount > 1 && (
+                <span className="text-xs text-muted-foreground/70">
+                  {passengerCount} passengers × ${(flightCost / passengerCount).toFixed(2)}
+                </span>
+              )}
+            </div>
             <span className="font-medium">${flightCost.toFixed(2)}</span>
           </div>
           {groundTransport > 0 && (

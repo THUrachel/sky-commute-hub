@@ -254,6 +254,7 @@ const Index = () => {
                 flightCost={costs.flightCost}
                 groundTransport={costs.groundTransport}
                 dining={costs.dining}
+                passengerCount={passengerCount}
                 onBooking={handleBooking}
                 isLoading={isLoading}
               />
