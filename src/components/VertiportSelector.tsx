@@ -39,7 +39,12 @@ const vertiports: Vertiport[] = [
   { id: "nyc-jfk", name: "JFK Airport Vertiport", city: "New York", state: "NY", zipcodeRanges: ["100", "101", "102", "103", "104", "110", "111", "112", "113", "114", "115", "116"] },
   { id: "miami-downtown", name: "Miami Downtown Vertiport", city: "Miami", state: "FL", zipcodeRanges: ["331", "332", "333"] },
   { id: "chicago-downtown", name: "Chicago Downtown Vertiport", city: "Chicago", state: "IL", zipcodeRanges: ["606", "607", "608"] },
-  { id: "seattle-downtown", name: "Seattle Downtown Vertiport", city: "Seattle", state: "WA", zipcodeRanges: ["981", "982"] },
+  { id: "seattle-downtown", name: "Seattle Downtown Vertiport", city: "Seattle", state: "WA", zipcodeRanges: ["981"] },
+  { id: "seattle-seatac", name: "Sea-Tac Airport Vertiport", city: "SeaTac", state: "WA", zipcodeRanges: ["981", "988"] },
+  { id: "bellevue-downtown", name: "Bellevue Downtown Vertiport", city: "Bellevue", state: "WA", zipcodeRanges: ["980"] },
+  { id: "tacoma-downtown", name: "Tacoma Downtown Vertiport", city: "Tacoma", state: "WA", zipcodeRanges: ["984"] },
+  { id: "everett-downtown", name: "Everett Downtown Vertiport", city: "Everett", state: "WA", zipcodeRanges: ["982"] },
+  { id: "redmond-tech", name: "Redmond Tech Hub Vertiport", city: "Redmond", state: "WA", zipcodeRanges: ["980"] },
 ];
 
 // Helper function to get state from zipcode prefix
