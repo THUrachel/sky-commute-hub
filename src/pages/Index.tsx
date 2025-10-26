@@ -207,14 +207,14 @@ const Index = () => {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <VertiportSelector
-                  label="Select Pickup Vertiport"
+                  label="Pickup Vertiport"
                   value={pickup}
                   onChange={setPickup}
                   zipcode={pickupZipcode}
                   onZipcodeChange={setPickupZipcode}
                 />
                 <VertiportSelector
-                  label="Select Destination Vertiport"
+                  label="Destination Vertiport"
                   value={destination}
                   onChange={setDestination}
                   zipcode={destinationZipcode}
