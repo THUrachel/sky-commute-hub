@@ -126,14 +126,23 @@ const Index = () => {
   };
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
+    try {
+      // Sign out from Supabase
+      await supabase.auth.signOut({ scope: 'local' });
+      
+      // Clear local state
+      setUser(null);
+      
+      // Show success message
+      toast.success("Logged out successfully");
+      
+      // Navigate to auth page
+      navigate("/auth", { replace: true });
+    } catch (error) {
       console.error("Logout error:", error);
-      // Even if there's an error, clear local state and redirect
-      // This handles cases where the session is already invalid
+      // Even on error, redirect to auth page
+      navigate("/auth", { replace: true });
     }
-    toast.success("Logged out successfully");
-    navigate("/auth", { replace: true });
   };
 
   const costs = calculateCosts();
