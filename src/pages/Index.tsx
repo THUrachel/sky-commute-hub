@@ -65,7 +65,7 @@ const Index = () => {
               </h1>
             </div>
             <p className="text-xl md:text-2xl text-white/90 font-light">
-              The future of urban air mobility is here
+              Trusted Transport in the Third Dimension
             </p>
             <p className="text-lg text-white/80">
               Experience seamless aerial rideshare with zero emissions
