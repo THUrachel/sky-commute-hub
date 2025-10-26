@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import heroImage from "@/assets/hero-evtol.jpg";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -119,8 +120,19 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-sky flex items-center justify-center p-4 py-12">
-      <Card className="w-full max-w-md p-6 md:p-8 shadow-elevated">
+    <div className="min-h-screen relative flex items-center justify-center p-4 py-12">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src={heroImage}
+          alt="Aeolus eVTOL Aircraft"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/40 to-background/95" />
+      </div>
+
+      {/* Card */}
+      <Card className="w-full max-w-md p-6 md:p-8 shadow-elevated relative z-10 backdrop-blur-sm bg-card/95">
         <div className="flex flex-col items-center mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Plane className="h-8 w-8 text-primary animate-glow" />
