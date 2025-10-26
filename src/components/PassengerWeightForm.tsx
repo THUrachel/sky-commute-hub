@@ -2,6 +2,7 @@ import { Users, Weight } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface PassengerWeightFormProps {
   passengerCount: number;
@@ -53,7 +54,13 @@ export const PassengerWeightForm = ({
             type="button"
             variant="outline"
             size="icon"
-            onClick={() => onPassengerCountChange(Math.min(3, passengerCount + 1))}
+            onClick={() => {
+              if (passengerCount >= 3) {
+                toast.error("Maximum 3 passengers allowed");
+              } else {
+                onPassengerCountChange(passengerCount + 1);
+              }
+            }}
             className="h-10 w-10"
           >
             +
