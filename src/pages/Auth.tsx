@@ -119,9 +119,9 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-sky flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 shadow-elevated">
-        <div className="flex flex-col items-center mb-8">
+    <div className="min-h-screen bg-gradient-sky flex items-center justify-center p-4 py-12">
+      <Card className="w-full max-w-md p-6 md:p-8 shadow-elevated">
+        <div className="flex flex-col items-center mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Plane className="h-8 w-8 text-primary animate-glow" />
             <h1 className="text-3xl font-bold">Aeolus</h1>
@@ -132,7 +132,7 @@ const Auth = () => {
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
