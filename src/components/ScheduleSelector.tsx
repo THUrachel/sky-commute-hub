@@ -1,4 +1,4 @@
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -88,15 +88,12 @@ export const ScheduleSelector = ({
           </PopoverContent>
         </Popover>
         
-        <div className="relative">
-          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="time"
-            value={selectedTime}
-            onChange={(e) => handleTimeChange(e.target.value)}
-            className="h-12 bg-card w-full pl-10"
-          />
-        </div>
+        <Input
+          type="time"
+          value={selectedTime}
+          onChange={(e) => handleTimeChange(e.target.value)}
+          className="h-12 bg-card w-full"
+        />
       </div>
     </div>
   );
