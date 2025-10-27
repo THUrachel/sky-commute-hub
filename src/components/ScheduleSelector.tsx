@@ -22,7 +22,7 @@ export const ScheduleSelector = ({
           <Calendar className="h-4 w-4" />
           Date
         </Label>
-        <div className="ml-6">
+        <div className="sm:ml-6">
           <Input
             type="date"
             value={date}
@@ -38,7 +38,7 @@ export const ScheduleSelector = ({
           <Clock className="h-4 w-4" />
           Time
         </Label>
-        <div className="ml-6">
+        <div className="sm:ml-6">
           <Input
             type="time"
             value={time}
