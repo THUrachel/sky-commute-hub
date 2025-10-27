@@ -181,9 +181,9 @@ const Auth = () => {
             </TabsContent>
 
             <TabsContent value="signup" className="flex-1 overflow-y-auto">
-              <form onSubmit={handleSignup} className="space-y-3">
-              <div className="space-y-1">
-                <Label htmlFor="signup-name">Full Name</Label>
+              <form onSubmit={handleSignup} className="space-y-2">
+              <div>
+                <Label htmlFor="signup-name" className="text-sm">Full Name</Label>
                 <Input
                   id="signup-name"
                   type="text"
@@ -192,10 +192,11 @@ const Auth = () => {
                   onChange={(e) => setSignupFullName(e.target.value)}
                   required
                   disabled={isLoading}
+                  className="h-9 mt-1"
                 />
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="signup-email">Email</Label>
+              <div>
+                <Label htmlFor="signup-email" className="text-sm">Email</Label>
                 <Input
                   id="signup-email"
                   type="email"
@@ -204,10 +205,11 @@ const Auth = () => {
                   onChange={(e) => setSignupEmail(e.target.value)}
                   required
                   disabled={isLoading}
+                  className="h-9 mt-1"
                 />
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="signup-password">Password</Label>
+              <div>
+                <Label htmlFor="signup-password" className="text-sm">Password</Label>
                 <Input
                   id="signup-password"
                   type="password"
@@ -217,12 +219,13 @@ const Auth = () => {
                   required
                   disabled={isLoading}
                   minLength={6}
+                  className="h-9 mt-1"
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Must be at least 6 characters
                 </p>
               </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full mt-3" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
               </form>
