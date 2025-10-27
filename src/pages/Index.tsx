@@ -80,6 +80,10 @@ const Index = () => {
       setGroundTransport(bookingData.ground_transport || "");
       setDining(bookingData.dining_options || []);
       
+      // Restore zipcode states for vertiports
+      setPickupZipcode(bookingData.pickup_zipcode || "");
+      setDestinationZipcode(bookingData.destination_zipcode || "");
+      
       // Clear the state so it doesn't persist on future visits
       navigate(location.pathname, { replace: true, state: null });
     }
@@ -243,6 +247,8 @@ const Index = () => {
       ground_transport_cost: groundTransportCost,
       dining_cost: diningCost,
       total_cost: totalCost,
+      pickup_zipcode: pickupZipcode,
+      destination_zipcode: destinationZipcode,
     };
     
     // Pass data via navigation state
