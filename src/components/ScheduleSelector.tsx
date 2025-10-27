@@ -16,7 +16,7 @@ export const ScheduleSelector = ({
   onTimeChange,
 }: ScheduleSelectorProps) => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
       <div className="space-y-2">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Calendar className="h-4 w-4" />
@@ -28,7 +28,7 @@ export const ScheduleSelector = ({
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
             min={new Date().toISOString().split("T")[0]}
-            className="h-12 bg-card"
+            className="h-12 bg-card max-w-xs"
           />
         </div>
       </div>
@@ -43,7 +43,7 @@ export const ScheduleSelector = ({
             type="time"
             value={time}
             onChange={(e) => onTimeChange(e.target.value)}
-            className="h-12 bg-card"
+            className="h-12 bg-card max-w-xs"
           />
         </div>
       </div>
