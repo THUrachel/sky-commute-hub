@@ -275,12 +275,12 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
               Select Vertiport
             </Label>
             <Select value={value} onValueChange={onChange} disabled={filteredVertiports.length === 0}>
-              <SelectTrigger id="vertiport" className="h-12 bg-card border-border focus:border-primary transition-colors">
+              <SelectTrigger id="vertiport" className="h-12 bg-card border-border focus:border-primary transition-colors [&>span]:pl-0">
                 <SelectValue placeholder={filteredVertiports.length === 0 ? "No vertiports available in this area" : "Select a vertiport"} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-popover">
                 {filteredVertiports.map((vertiport) => (
-                  <SelectItem key={vertiport.id} value={vertiport.id}>
+                  <SelectItem key={vertiport.id} value={vertiport.id} className="pl-3">
                     {vertiport.name} ({vertiport.city}, {vertiport.state})
                   </SelectItem>
                 ))}
