@@ -77,28 +77,34 @@ export const PassengerWeightForm = ({
             <div className="grid grid-cols-2 gap-4 max-w-md">
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground">
-                  Passenger Weight (lbs)
+                  Passenger Weight
                 </Label>
-                <Input
-                  type="number"
-                  value={passengerWeights[index] || ""}
-                  onChange={(e) => updatePassengerWeight(index, e.target.value)}
-                  placeholder="150"
-                  className="h-12 bg-card"
-                />
+                <div className="flex items-center gap-2 max-w-[140px]">
+                  <Input
+                    type="number"
+                    value={passengerWeights[index] || ""}
+                    onChange={(e) => updatePassengerWeight(index, e.target.value)}
+                    placeholder="150"
+                    className="h-12 bg-card"
+                  />
+                  <span className="text-sm text-muted-foreground">lbs</span>
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground">
-                  Luggage Weight (lbs)
+                  Luggage Weight
                 </Label>
-                <Input
-                  type="number"
-                  value={luggageWeights[index] || ""}
-                  onChange={(e) => updateLuggageWeight(index, e.target.value)}
-                  placeholder="25"
-                  className="h-12 bg-card"
-                />
+                <div className="flex items-center gap-2 max-w-[140px]">
+                  <Input
+                    type="number"
+                    value={luggageWeights[index] || ""}
+                    onChange={(e) => updateLuggageWeight(index, e.target.value)}
+                    placeholder="25"
+                    className="h-12 bg-card"
+                  />
+                  <span className="text-sm text-muted-foreground">lbs</span>
+                </div>
               </div>
             </div>
           </div>
