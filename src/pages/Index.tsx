@@ -163,8 +163,8 @@ const Index = () => {
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const distance = R * c;
         
-        // Price per mile: $2.50 per mile with a minimum of $150
-        const pricePerMile = 2.5;
+        // Price per mile: $5.00 per mile with a minimum of $150
+        const pricePerMile = 5;
         const basePricePerPassenger = Math.max(150, Math.round(distance * pricePerMile));
         
         // Progressive discount pricing: 1st passenger full price, subsequent passengers get discounts
