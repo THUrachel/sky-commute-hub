@@ -33,6 +33,7 @@ const Index = () => {
   const [luggageWeights, setLuggageWeights] = useState<string[]>(["25"]);
   const [groundTransport, setGroundTransport] = useState<string>("");
   const [dining, setDining] = useState<string[]>([]);
+  const [flightCost, setFlightCost] = useState(0);
 
   // Check authentication status and redirect if not logged in
   useEffect(() => {
@@ -60,66 +61,80 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const calculateCosts = () => {
-    // Route-based pricing: Different base prices for different vertiport combinations
-    const getBasePrice = (pickupId: string, destinationId: string): number => {
-      // Create a route key (alphabetically sorted to handle both directions)
-      const routeKey = [pickupId, destinationId].sort().join("->");
+  // Calculate flight cost based on distance whenever pickup or destination changes
+  useEffect(() => {
+    const calculateFlightCost = async () => {
+      if (!pickup || !destination) {
+        setFlightCost(0);
+        return;
+      }
       
-      // Route pricing tiers based on distance and demand
-      const routePrices: Record<string, number> = {
-        // Short routes within same metro area
-        "sfo-airport->sfo-downtown": 199,
-        "oak-downtown->sfo-downtown": 229,
-        "bellevue-downtown->redmond-tech": 179,
-        "bellevue-downtown->seattle-downtown": 189,
-        "seattle-downtown->seattle-seatac": 219,
+      try {
+        // Fetch both vertiports
+        const { data: vertiports } = await supabase
+          .from('vertiports')
+          .select('id, latitude, longitude')
+          .in('id', [pickup, destination]);
         
-        // Medium routes between nearby cities
-        "oak-downtown->sjc-downtown": 279,
-        "sfo-airport->sjc-downtown": 289,
-        "sfo-downtown->sjc-downtown": 299,
-        "seattle-downtown->tacoma-downtown": 249,
-        "seattle-seatac->tacoma-downtown": 239,
-        "bellevue-downtown->everett-downtown": 269,
-        "seattle-downtown->everett-downtown": 259,
+        if (!vertiports || vertiports.length !== 2) {
+          setFlightCost(0);
+          return;
+        }
         
-        // Longer routes
-        "la-downtown->sd-downtown": 349,
-        "la-lax->sd-downtown": 359,
-        "sfo-airport->la-lax": 449,
-        "sfo-downtown->la-downtown": 469,
+        const pickupPort = vertiports.find(v => v.id === pickup);
+        const destPort = vertiports.find(v => v.id === destination);
         
-        // Cross-country premium routes
-        "la-downtown->nyc-manhattan": 899,
-        "sfo-downtown->nyc-manhattan": 949,
-        "seattle-downtown->nyc-manhattan": 979,
-        "chicago-downtown->nyc-manhattan": 599,
-        "miami-downtown->nyc-manhattan": 649,
-      };
-      
-      // Return route price or default base price
-      return routePrices[routeKey] || 299;
+        if (!pickupPort || !destPort) {
+          setFlightCost(0);
+          return;
+        }
+        
+        // Calculate distance using Haversine formula
+        const R = 3959; // Earth's radius in miles
+        const lat1 = Number(pickupPort.latitude);
+        const lng1 = Number(pickupPort.longitude);
+        const lat2 = Number(destPort.latitude);
+        const lng2 = Number(destPort.longitude);
+        
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLng = (lng2 - lng1) * Math.PI / 180;
+        const a = 
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        
+        // Price per mile: $2.50 per mile with a minimum of $150
+        const pricePerMile = 2.5;
+        const basePricePerPassenger = Math.max(150, Math.round(distance * pricePerMile));
+        
+        // Progressive discount pricing: 1st passenger full price, subsequent passengers get discounts
+        let totalFlightCost = 0;
+        
+        for (let i = 1; i <= passengerCount; i++) {
+          if (i === 1) {
+            totalFlightCost += basePricePerPassenger; // Full price
+          } else if (i === 2) {
+            totalFlightCost += Math.round(basePricePerPassenger * 0.83); // ~17% discount
+          } else if (i === 3) {
+            totalFlightCost += Math.round(basePricePerPassenger * 0.67); // ~33% discount
+          } else {
+            totalFlightCost += Math.round(basePricePerPassenger * 0.50); // 50% discount for 4th+ passengers
+          }
+        }
+        
+        setFlightCost(totalFlightCost);
+      } catch (error) {
+        console.error('Error calculating flight cost:', error);
+        setFlightCost(0);
+      }
     };
     
-    // Get base price for selected route
-    const basePricePerPassenger = getBasePrice(pickup, destination);
-    
-    // Progressive discount pricing: 1st passenger full price, subsequent passengers get discounts
-    let flightCost = 0;
-    
-    for (let i = 1; i <= passengerCount; i++) {
-      if (i === 1) {
-        flightCost += basePricePerPassenger; // Full price
-      } else if (i === 2) {
-        flightCost += Math.round(basePricePerPassenger * 0.83); // ~17% discount
-      } else if (i === 3) {
-        flightCost += Math.round(basePricePerPassenger * 0.67); // ~33% discount
-      } else {
-        flightCost += Math.round(basePricePerPassenger * 0.50); // 50% discount for 4th+ passengers
-      }
-    }
-    
+    calculateFlightCost();
+  }, [pickup, destination, passengerCount]);
+
+  const calculateCosts = () => {
     const transportCost = !groundTransport || groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
     const diningCost = dining.reduce((total, diningId) => {
       const option = diningOptions.find(opt => opt.id === diningId);
@@ -146,8 +161,8 @@ const Index = () => {
     }
 
     // Navigate to review page with booking data
-    const { flightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
-    const totalCost = flightCost + groundTransportCost + diningCost;
+    const { flightCost: calculatedFlightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
+    const totalCost = calculatedFlightCost + groundTransportCost + diningCost;
     
     const bookingData = {
       pickup_location: pickup,
@@ -160,7 +175,7 @@ const Index = () => {
       luggage_weights: luggageWeights,
       ground_transport: groundTransport,
       dining_options: dining,
-      flight_cost: flightCost,
+      flight_cost: calculatedFlightCost,
       ground_transport_cost: groundTransportCost,
       dining_cost: diningCost,
       total_cost: totalCost,
