@@ -20,7 +20,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [serviceArea, setServiceArea] = useState("");
+  const [serviceArea, setServiceArea] = useState("San Francisco Bay Area");
   const [pickup, setPickup] = useState("");
   const [pickupZipcode, setPickupZipcode] = useState("");
   const [destination, setDestination] = useState("");
