@@ -17,6 +17,7 @@ interface VertiportSelectorProps {
   onChange: (value: string) => void;
   zipcode: string;
   onZipcodeChange: (value: string) => void;
+  serviceArea?: string;
 }
 
 interface Vertiport {
@@ -113,7 +114,7 @@ const getStateFromZipcode = (zipcode: string): string[] => {
   return [];
 };
 
-export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange }: VertiportSelectorProps) => {
+export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea }: VertiportSelectorProps) => {
   const [filteredVertiports, setFilteredVertiports] = useState<Vertiport[]>([]);
   const [allVertiports, setAllVertiports] = useState<Vertiport[]>([]);
 
@@ -139,12 +140,17 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
       return;
     }
 
-    // Query the zipcodes table to find matching vertiports
-    const { data: zipcodeData, error } = await supabase
+    // Build query with service area filter if provided
+    let query = supabase
       .from('zipcodes')
-      .select('vertiport_id, latitude, longitude')
-      .eq('zipcode', zip)
-      .maybeSingle();
+      .select('vertiport_id, latitude, longitude, service_area_name')
+      .eq('zipcode', zip);
+    
+    if (serviceArea) {
+      query = query.eq('service_area_name', serviceArea);
+    }
+    
+    const { data: zipcodeData, error } = await query.maybeSingle();
 
     if (error || !zipcodeData) {
       setFilteredVertiports([]);
@@ -193,6 +199,23 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
     }
   };
 
+  // Show message if no service area selected
+  if (!serviceArea) {
+    return (
+      <div className="space-y-3 opacity-50">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <MapPin className="h-4 w-4" />
+          {label}
+        </Label>
+        <div className="ml-6 p-4 bg-muted/50 rounded-lg border border-dashed border-muted-foreground/20">
+          <p className="text-sm text-muted-foreground text-center">
+            Please select a service area first
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium flex items-center gap-2">
@@ -202,7 +225,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
       <div className="ml-6 space-y-3">
         <div>
           <Label htmlFor="zipcode" className="text-xs text-muted-foreground mb-1.5 block">
-            Enter the Location or Zipcode
+            Enter the Location or Zipcode in {serviceArea}
           </Label>
           <Input
             id="zipcode"

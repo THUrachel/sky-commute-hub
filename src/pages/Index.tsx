@@ -6,6 +6,7 @@ import heroImage from "@/assets/hero-evtol.jpg";
 import { Button } from "@/components/ui/button";
 import { LocationInput } from "@/components/LocationInput";
 import { VertiportSelector } from "@/components/VertiportSelector";
+import { ServiceAreaSelector } from "@/components/ServiceAreaSelector";
 import { RideTypeSelector } from "@/components/RideTypeSelector";
 import { ScheduleSelector } from "@/components/ScheduleSelector";
 import { PassengerWeightForm } from "@/components/PassengerWeightForm";
@@ -19,6 +20,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [serviceArea, setServiceArea] = useState("");
   const [pickup, setPickup] = useState("");
   const [pickupZipcode, setPickupZipcode] = useState("");
   const [destination, setDestination] = useState("");
@@ -256,6 +258,18 @@ const Index = () => {
             <div className="bg-card rounded-2xl shadow-elevated p-6 md:p-8 space-y-6 border border-border">
               <h2 className="text-2xl font-bold">Book Your Flight</h2>
 
+              <ServiceAreaSelector
+                value={serviceArea}
+                onChange={(newArea) => {
+                  setServiceArea(newArea);
+                  // Clear selections when service area changes
+                  setPickup("");
+                  setPickupZipcode("");
+                  setDestination("");
+                  setDestinationZipcode("");
+                }}
+              />
+
               <RideTypeSelector value={rideType} onChange={setRideType} />
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -265,6 +279,7 @@ const Index = () => {
                   onChange={setPickup}
                   zipcode={pickupZipcode}
                   onZipcodeChange={setPickupZipcode}
+                  serviceArea={serviceArea}
                 />
                 <VertiportSelector
                   label="Destination Vertiport"
@@ -272,6 +287,7 @@ const Index = () => {
                   onChange={setDestination}
                   zipcode={destinationZipcode}
                   onZipcodeChange={setDestinationZipcode}
+                  serviceArea={serviceArea}
                 />
               </div>
 

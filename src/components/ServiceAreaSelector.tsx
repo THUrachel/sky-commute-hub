@@ -1,0 +1,65 @@
+import { Globe } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface ServiceAreaSelectorProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export const ServiceAreaSelector = ({ value, onChange }: ServiceAreaSelectorProps) => {
+  const [serviceAreas, setServiceAreas] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchServiceAreas = async () => {
+      const { data, error } = await supabase
+        .from('zipcodes')
+        .select('service_area_name')
+        .not('service_area_name', 'is', null);
+      
+      if (data && !error) {
+        // Get unique service area names
+        const uniqueAreas = Array.from(new Set(data.map(item => item.service_area_name).filter(Boolean))) as string[];
+        setServiceAreas(uniqueAreas.sort());
+        
+        // Auto-select if only one service area exists
+        if (uniqueAreas.length === 1 && !value) {
+          onChange(uniqueAreas[0]);
+        }
+      }
+    };
+    
+    fetchServiceAreas();
+  }, []);
+
+  return (
+    <div className="space-y-3 p-6 bg-accent/5 rounded-xl border border-accent/20">
+      <Label className="text-sm font-medium flex items-center gap-2">
+        <Globe className="h-5 w-5 text-accent" />
+        Service Area
+      </Label>
+      <div className="ml-7">
+        <Select value={value} onValueChange={onChange}>
+          <SelectTrigger className="h-12 bg-card border-border focus:border-accent transition-colors">
+            <SelectValue placeholder="Select your service area" />
+          </SelectTrigger>
+          <SelectContent className="z-50 bg-popover">
+            {serviceAreas.map((area) => (
+              <SelectItem key={area} value={area}>
+                {area}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+};
