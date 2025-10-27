@@ -115,6 +115,80 @@ export type Database = {
         }
         Relationships: []
       }
+      vertiports: {
+        Row: {
+          city: string
+          created_at: string | null
+          id: string
+          latitude: number
+          longitude: number
+          name: string
+          state: string
+          updated_at: string | null
+        }
+        Insert: {
+          city: string
+          created_at?: string | null
+          id: string
+          latitude: number
+          longitude: number
+          name: string
+          state: string
+          updated_at?: string | null
+        }
+        Update: {
+          city?: string
+          created_at?: string | null
+          id?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          state?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      zipcodes: {
+        Row: {
+          borough: string | null
+          city: string | null
+          created_at: string | null
+          latitude: number | null
+          longitude: number | null
+          updated_at: string | null
+          vertiport_id: string
+          zipcode: string
+        }
+        Insert: {
+          borough?: string | null
+          city?: string | null
+          created_at?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          updated_at?: string | null
+          vertiport_id: string
+          zipcode: string
+        }
+        Update: {
+          borough?: string | null
+          city?: string | null
+          created_at?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          updated_at?: string | null
+          vertiport_id?: string
+          zipcode?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zipcodes_vertiport_id_fkey"
+            columns: ["vertiport_id"]
+            isOneToOne: false
+            referencedRelation: "vertiports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
