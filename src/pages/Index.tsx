@@ -59,19 +59,62 @@ const Index = () => {
   }, [navigate]);
 
   const calculateCosts = () => {
+    // Route-based pricing: Different base prices for different vertiport combinations
+    const getBasePrice = (pickupId: string, destinationId: string): number => {
+      // Create a route key (alphabetically sorted to handle both directions)
+      const routeKey = [pickupId, destinationId].sort().join("->");
+      
+      // Route pricing tiers based on distance and demand
+      const routePrices: Record<string, number> = {
+        // Short routes within same metro area
+        "sfo-airport->sfo-downtown": 199,
+        "oak-downtown->sfo-downtown": 229,
+        "bellevue-downtown->redmond-tech": 179,
+        "bellevue-downtown->seattle-downtown": 189,
+        "seattle-downtown->seattle-seatac": 219,
+        
+        // Medium routes between nearby cities
+        "oak-downtown->sjc-downtown": 279,
+        "sfo-airport->sjc-downtown": 289,
+        "sfo-downtown->sjc-downtown": 299,
+        "seattle-downtown->tacoma-downtown": 249,
+        "seattle-seatac->tacoma-downtown": 239,
+        "bellevue-downtown->everett-downtown": 269,
+        "seattle-downtown->everett-downtown": 259,
+        
+        // Longer routes
+        "la-downtown->sd-downtown": 349,
+        "la-lax->sd-downtown": 359,
+        "sfo-airport->la-lax": 449,
+        "sfo-downtown->la-downtown": 469,
+        
+        // Cross-country premium routes
+        "la-downtown->nyc-manhattan": 899,
+        "sfo-downtown->nyc-manhattan": 949,
+        "seattle-downtown->nyc-manhattan": 979,
+        "chicago-downtown->nyc-manhattan": 599,
+        "miami-downtown->nyc-manhattan": 649,
+      };
+      
+      // Return route price or default base price
+      return routePrices[routeKey] || 299;
+    };
+    
+    // Get base price for selected route
+    const basePricePerPassenger = getBasePrice(pickup, destination);
+    
     // Progressive discount pricing: 1st passenger full price, subsequent passengers get discounts
-    const basePricePerPassenger = 299;
     let flightCost = 0;
     
     for (let i = 1; i <= passengerCount; i++) {
       if (i === 1) {
         flightCost += basePricePerPassenger; // Full price
       } else if (i === 2) {
-        flightCost += 249; // $50 discount
+        flightCost += Math.round(basePricePerPassenger * 0.83); // ~17% discount
       } else if (i === 3) {
-        flightCost += 199; // $100 discount
+        flightCost += Math.round(basePricePerPassenger * 0.67); // ~33% discount
       } else {
-        flightCost += 149; // $150 discount for 4th+ passengers
+        flightCost += Math.round(basePricePerPassenger * 0.50); // 50% discount for 4th+ passengers
       }
     }
     
