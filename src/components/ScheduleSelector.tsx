@@ -73,7 +73,7 @@ export const ScheduleSelector = ({
         <CalendarIcon className="h-4 w-4" />
         Date & Time
       </Label>
-      <div className="ml-6 max-w-md space-y-3">
+      <div className="ml-6 max-w-xs space-y-3">
         <Popover>
           <PopoverTrigger asChild>
             <Button
