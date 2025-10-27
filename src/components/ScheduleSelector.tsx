@@ -16,13 +16,13 @@ export const ScheduleSelector = ({
   onTimeChange,
 }: ScheduleSelectorProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:max-w-2xl">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md sm:max-w-2xl">
       <div className="space-y-2">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Calendar className="h-4 w-4" />
           Date
         </Label>
-        <div className="sm:ml-6">
+        <div className="ml-6">
           <Input
             type="date"
             value={date}
@@ -38,7 +38,7 @@ export const ScheduleSelector = ({
           <Clock className="h-4 w-4" />
           Time
         </Label>
-        <div className="sm:ml-6">
+        <div className="ml-6">
           <Input
             type="time"
             value={time}
