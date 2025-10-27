@@ -28,7 +28,7 @@ export const ScheduleSelector = ({
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
             min={new Date().toISOString().split("T")[0]}
-            className="h-12 bg-card w-full max-w-md sm:max-w-xs"
+            className="h-12 bg-card w-full max-w-md"
           />
         </div>
       </div>
@@ -43,7 +43,7 @@ export const ScheduleSelector = ({
             type="time"
             value={time}
             onChange={(e) => onTimeChange(e.target.value)}
-            className="h-12 bg-card w-full max-w-md sm:max-w-xs"
+            className="h-12 bg-card w-full max-w-md"
           />
         </div>
       </div>
