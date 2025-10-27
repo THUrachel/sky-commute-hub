@@ -18,6 +18,7 @@ interface VertiportSelectorProps {
   zipcode: string;
   onZipcodeChange: (value: string) => void;
   serviceArea?: string;
+  disabled?: boolean;
 }
 
 interface Vertiport {
@@ -114,7 +115,7 @@ const getStateFromZipcode = (zipcode: string): string[] => {
   return [];
 };
 
-export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea }: VertiportSelectorProps) => {
+export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea, disabled = false }: VertiportSelectorProps) => {
   const [filteredVertiports, setFilteredVertiports] = useState<Vertiport[]>([]);
   const [allVertiports, setAllVertiports] = useState<Vertiport[]>([]);
   const [zipcodeError, setZipcodeError] = useState<string>("");
@@ -258,8 +259,9 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
             placeholder="e.g., 94102"
             value={zipcode}
             onChange={(e) => handleZipcodeChange(e.target.value)}
-            className="h-12 bg-card border-border focus:border-primary transition-colors w-[110px] px-3"
+            className="h-12 bg-card border-border focus:border-primary transition-colors w-[110px] px-3 disabled:opacity-50 disabled:cursor-not-allowed"
             maxLength={5}
+            disabled={disabled}
           />
         </div>
         
