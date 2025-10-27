@@ -150,7 +150,7 @@ const Auth = () => {
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-          <div className="h-[360px] flex flex-col">
+          <div className="h-[280px] flex flex-col">
             <TabsContent value="login" className="flex-1 overflow-y-auto">
               <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
