@@ -28,13 +28,13 @@ export const ScheduleSelector = ({
         <Calendar className="h-4 w-4" />
         Date & Time
       </Label>
-      <div className="ml-6 max-w-md">
+      <div className="ml-6">
         <Input
           type="datetime-local"
           value={datetime}
           onChange={(e) => onDateTimeChange(e.target.value)}
           min={getMinDateTime()}
-          className="h-12 bg-card w-full"
+          className="h-12 bg-card w-full max-w-md"
         />
       </div>
     </div>
