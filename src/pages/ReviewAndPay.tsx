@@ -23,6 +23,7 @@ interface BookingData {
   ground_transport_cost: number;
   dining_cost: number;
   total_cost: number;
+  service_area?: string;
 }
 
 const ReviewAndPay = () => {

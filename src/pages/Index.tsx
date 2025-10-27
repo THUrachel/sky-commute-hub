@@ -63,6 +63,7 @@ const Index = () => {
   useEffect(() => {
     const bookingData = location.state as any;
     if (bookingData) {
+      setServiceArea(bookingData.service_area || "San Francisco Bay Area");
       setPickup(bookingData.pickup_location || "");
       setDestination(bookingData.destination || "");
       setRideType(bookingData.ride_type || "on-demand");
@@ -258,6 +259,7 @@ const Index = () => {
       total_cost: totalCost,
       pickup_zipcode: pickupZipcode,
       destination_zipcode: destinationZipcode,
+      service_area: serviceArea,
     };
     
     // Pass data via navigation state
