@@ -185,6 +185,11 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
       .slice(0, 5); // Show top 5 nearest vertiports
 
     setFilteredVertiports(sorted);
+    
+    // Auto-select the closest vertiport
+    if (sorted.length > 0) {
+      onChange(sorted[0].id);
+    }
   };
 
   const handleZipcodeChange = (newZipcode: string) => {
@@ -225,7 +230,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
       <div className="ml-6 space-y-3">
         <div>
           <Label htmlFor="zipcode" className="text-xs text-muted-foreground mb-1.5 block">
-            Enter the Location or Zipcode in {serviceArea}
+            Enter a Zipcode inside the Service Area
           </Label>
           <Input
             id="zipcode"
