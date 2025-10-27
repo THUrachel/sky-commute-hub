@@ -163,10 +163,23 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
     // Clear error if zipcode is valid
     setZipcodeError("");
 
-    // Get the associated vertiport and nearby vertiports
+    // Get vertiports that are actually in this service area
+    const { data: serviceAreaVertiportIds } = await supabase
+      .from('zipcodes')
+      .select('vertiport_id')
+      .eq('service_area_name', zipcodeData.service_area_name);
+    
+    if (!serviceAreaVertiportIds || serviceAreaVertiportIds.length === 0) {
+      setFilteredVertiports([]);
+      return;
+    }
+    
+    const validVertiportIds = [...new Set(serviceAreaVertiportIds.map(z => z.vertiport_id))];
+    
     const { data: nearbyVertiports } = await supabase
       .from('vertiports')
-      .select('*');
+      .select('*')
+      .in('id', validVertiportIds);
 
     if (!nearbyVertiports) {
       setFilteredVertiports([]);
