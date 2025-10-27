@@ -61,6 +61,37 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // Check for matching vertiports and auto-switch if needed
+  useEffect(() => {
+    const checkAndUpdateMatchingVertiports = async () => {
+      if (pickup && destination && pickup === destination) {
+        // Fetch vertiports to find next available option
+        const { data: zipcodeData } = await supabase
+          .from('zipcodes')
+          .select('vertiport_id, service_area_name')
+          .eq('zipcode', destinationZipcode)
+          .maybeSingle();
+        
+        if (zipcodeData) {
+          const { data: serviceAreaVertiportIds } = await supabase
+            .from('zipcodes')
+            .select('vertiport_id')
+            .eq('service_area_name', zipcodeData.service_area_name);
+          
+          if (serviceAreaVertiportIds && serviceAreaVertiportIds.length > 0) {
+            const validVertiportIds = [...new Set(serviceAreaVertiportIds.map(z => z.vertiport_id))];
+            const nextVertiport = validVertiportIds.find(id => id !== pickup);
+            if (nextVertiport) {
+              setDestination(nextVertiport);
+            }
+          }
+        }
+      }
+    };
+    
+    checkAndUpdateMatchingVertiports();
+  }, [pickup, destination, destinationZipcode]);
+
   // Calculate flight cost based on distance whenever pickup or destination changes
   useEffect(() => {
     const calculateFlightCost = async () => {
