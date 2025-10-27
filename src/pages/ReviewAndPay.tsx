@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { diningOptions } from "@/components/PassengerWeightForm";
+import { DiningSelection, standardMenuOptions, customCateringOptions } from "@/components/PassengerWeightForm";
 
 interface BookingData {
   pickup_location: string;
@@ -18,7 +18,7 @@ interface BookingData {
   passenger_weights: string[];
   luggage_weights: string[];
   ground_transport: string;
-  dining_options: string[];
+  dining_selections: DiningSelection[];
   flight_cost: number;
   ground_transport_cost: number;
   dining_cost: number;
@@ -62,7 +62,7 @@ const ReviewAndPay = () => {
         passenger_weights: bookingData.passenger_weights,
         luggage_weights: bookingData.luggage_weights,
         ground_transport: bookingData.ground_transport,
-        dining_options: bookingData.dining_options,
+        dining_options: bookingData.dining_selections as any,
         flight_cost: bookingData.flight_cost,
         ground_transport_cost: bookingData.ground_transport_cost,
         dining_cost: bookingData.dining_cost,
@@ -181,7 +181,7 @@ const ReviewAndPay = () => {
               </>
             )}
 
-            {bookingData.dining_options && bookingData.dining_options.some(option => option && option !== "none") && (
+            {bookingData.dining_selections && bookingData.dining_selections.some(selection => selection.type !== "none") && (
               <>
                 <Separator />
                 <div className="space-y-2">
@@ -190,14 +190,30 @@ const ReviewAndPay = () => {
                     <span className="font-medium">Dining Options</span>
                   </div>
                   <div className="ml-6 space-y-2">
-                    {bookingData.dining_options.map((optionId, index) => {
-                      if (!optionId || optionId === "none") return null;
-                      const option = diningOptions.find(opt => opt.id === optionId);
-                      if (!option) return null;
+                    {bookingData.dining_selections.map((selection, passengerIndex) => {
+                      if (selection.type === "none") return null;
+                      
                       return (
-                        <div key={index} className="text-sm">
-                          <span className="font-medium">Passenger {index + 1}:</span>{" "}
-                          {option.name}
+                        <div key={passengerIndex} className="text-sm space-y-1">
+                          <div className="font-medium">Passenger {passengerIndex + 1}:</div>
+                          {selection.type === "standard" && selection.standardOptions?.map(optId => {
+                            const option = standardMenuOptions.find(opt => opt.id === optId);
+                            if (!option) return null;
+                            return (
+                              <div key={optId} className="ml-4 text-muted-foreground">
+                                • {option.name}
+                              </div>
+                            );
+                          })}
+                          {selection.type === "custom" && selection.customOptions?.map(optId => {
+                            const option = customCateringOptions.find(opt => opt.id === optId);
+                            if (!option) return null;
+                            return (
+                              <div key={optId} className="ml-4 text-muted-foreground">
+                                • Custom Catering: {option.name}
+                              </div>
+                            );
+                          })}
                         </div>
                       );
                     })}

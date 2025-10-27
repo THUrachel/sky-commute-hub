@@ -2,14 +2,14 @@ import { CreditCard } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { diningOptions } from "@/components/PassengerWeightForm";
+import { DiningSelection, standardMenuOptions, customCateringOptions } from "@/components/PassengerWeightForm";
 
 interface PaymentSummaryProps {
   flightCost: number;
   groundTransport: number;
   dining: number;
   passengerCount: number;
-  selectedDining: string[];
+  diningSelections: DiningSelection[];
   onBooking: () => void;
   isLoading?: boolean;
 }
@@ -19,7 +19,7 @@ export const PaymentSummary = ({
   groundTransport,
   dining,
   passengerCount,
-  selectedDining,
+  diningSelections,
   onBooking,
   isLoading = false,
 }: PaymentSummaryProps) => {
@@ -90,17 +90,34 @@ export const PaymentSummary = ({
               </div>
             </>
           )}
-          {selectedDining.some(option => option && option !== "none") && (
+          {diningSelections.some(selection => selection.type !== "none") && (
             <>
               <div className="font-semibold mt-3">Dining</div>
-              {selectedDining.map((optionId, passengerIndex) => {
-                if (!optionId || optionId === "none") return null;
-                const option = diningOptions.find(opt => opt.id === optionId);
-                if (!option) return null;
+              {diningSelections.map((selection, passengerIndex) => {
+                if (selection.type === "none") return null;
+                
                 return (
-                  <div key={passengerIndex} className="flex justify-between text-sm pl-4">
-                    <span className="text-muted-foreground">P{passengerIndex + 1} - {option.name}</span>
-                    <span className="font-medium">${option.price.toFixed(2)}</span>
+                  <div key={passengerIndex} className="space-y-1">
+                    {selection.type === "standard" && selection.standardOptions?.map(optId => {
+                      const option = standardMenuOptions.find(opt => opt.id === optId);
+                      if (!option) return null;
+                      return (
+                        <div key={`${passengerIndex}-${optId}`} className="flex justify-between text-sm pl-4">
+                          <span className="text-muted-foreground">P{passengerIndex + 1} - {option.name}</span>
+                          <span className="font-medium">${option.price.toFixed(2)}</span>
+                        </div>
+                      );
+                    })}
+                    {selection.type === "custom" && selection.customOptions?.map(optId => {
+                      const option = customCateringOptions.find(opt => opt.id === optId);
+                      if (!option) return null;
+                      return (
+                        <div key={`${passengerIndex}-${optId}`} className="flex justify-between text-sm pl-4">
+                          <span className="text-muted-foreground">P{passengerIndex + 1} - Custom: {option.name}</span>
+                          <span className="font-medium">${option.price.toFixed(2)}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })}

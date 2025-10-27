@@ -3,15 +3,26 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
-export const diningOptions = [
-  { id: "none", name: "No Dining Service", price: 0 },
+export const standardMenuOptions = [
   { id: "gourmet", name: "Gourmet In-Flight Meal", price: 45 },
   { id: "snacks", name: "Premium Snacks & Beverages", price: 20 },
   { id: "champagne", name: "Champagne Service", price: 35 },
-  { id: "catering", name: "Custom Catering", price: 75 },
 ];
+
+export const customCateringOptions = [
+  { id: "vegetarian", name: "Vegetarian", price: 25 },
+  { id: "gluten-free", name: "Gluten Free", price: 25 },
+  { id: "lactose-free", name: "Lactose Free", price: 25 },
+];
+
+export interface DiningSelection {
+  type: "none" | "standard" | "custom";
+  standardOptions?: string[];
+  customOptions?: string[];
+}
 
 interface PassengerWeightFormProps {
   disabled?: boolean;
@@ -21,8 +32,8 @@ interface PassengerWeightFormProps {
   onPassengerWeightsChange: (weights: string[]) => void;
   luggageWeights: string[];
   onLuggageWeightsChange: (weights: string[]) => void;
-  diningOptions: string[];
-  onDiningOptionsChange: (options: string[]) => void;
+  diningSelections: DiningSelection[];
+  onDiningSelectionsChange: (selections: DiningSelection[]) => void;
 }
 
 export const PassengerWeightForm = ({
@@ -33,8 +44,8 @@ export const PassengerWeightForm = ({
   onPassengerWeightsChange,
   luggageWeights,
   onLuggageWeightsChange,
-  diningOptions: selectedDining,
-  onDiningOptionsChange,
+  diningSelections,
+  onDiningSelectionsChange,
 }: PassengerWeightFormProps) => {
   const updatePassengerWeight = (index: number, value: string) => {
     const newWeights = [...passengerWeights];
@@ -48,10 +59,52 @@ export const PassengerWeightForm = ({
     onLuggageWeightsChange(newWeights);
   };
 
-  const updateDiningOption = (passengerIndex: number, optionId: string) => {
-    const newDining = [...selectedDining];
-    newDining[passengerIndex] = optionId;
-    onDiningOptionsChange(newDining);
+  const updateDiningType = (passengerIndex: number, type: "none" | "standard" | "custom") => {
+    const newSelections = [...diningSelections];
+    newSelections[passengerIndex] = {
+      type,
+      standardOptions: type === "standard" ? [] : undefined,
+      customOptions: type === "custom" ? [] : undefined,
+    };
+    onDiningSelectionsChange(newSelections);
+  };
+
+  const toggleStandardOption = (passengerIndex: number, optionId: string) => {
+    const newSelections = [...diningSelections];
+    const current = newSelections[passengerIndex];
+    const currentOptions = current.standardOptions || [];
+    
+    if (currentOptions.includes(optionId)) {
+      newSelections[passengerIndex] = {
+        ...current,
+        standardOptions: currentOptions.filter(id => id !== optionId),
+      };
+    } else {
+      newSelections[passengerIndex] = {
+        ...current,
+        standardOptions: [...currentOptions, optionId],
+      };
+    }
+    onDiningSelectionsChange(newSelections);
+  };
+
+  const toggleCustomOption = (passengerIndex: number, optionId: string) => {
+    const newSelections = [...diningSelections];
+    const current = newSelections[passengerIndex];
+    const currentOptions = current.customOptions || [];
+    
+    if (currentOptions.includes(optionId)) {
+      newSelections[passengerIndex] = {
+        ...current,
+        customOptions: currentOptions.filter(id => id !== optionId),
+      };
+    } else {
+      newSelections[passengerIndex] = {
+        ...current,
+        customOptions: [...currentOptions, optionId],
+      };
+    }
+    onDiningSelectionsChange(newSelections);
   };
   return (
     <div className="space-y-4">
@@ -142,22 +195,74 @@ export const PassengerWeightForm = ({
               <Label className="text-xs text-muted-foreground">
                 Dining Options
               </Label>
+              
+              {/* Primary Selection */}
               <Select
                 disabled={disabled}
-                value={selectedDining[index] || "none"}
-                onValueChange={(value) => updateDiningOption(index, value)}
+                value={diningSelections[index]?.type || "none"}
+                onValueChange={(value: "none" | "standard" | "custom") => updateDiningType(index, value)}
               >
                 <SelectTrigger className="h-12 bg-card">
-                  <SelectValue placeholder="Select dining option" />
+                  <SelectValue placeholder="Select dining service" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border z-50">
-                  {diningOptions.map((option) => (
-                    <SelectItem key={option.id} value={option.id} className="cursor-pointer">
-                      {option.name} {option.price > 0 && `($${option.price})`}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="none" className="cursor-pointer">
+                    No Dining Service
+                  </SelectItem>
+                  <SelectItem value="standard" className="cursor-pointer">
+                    Standard Menu
+                  </SelectItem>
+                  <SelectItem value="custom" className="cursor-pointer">
+                    Custom Catering
+                  </SelectItem>
                 </SelectContent>
               </Select>
+
+              {/* Standard Menu Options */}
+              {diningSelections[index]?.type === "standard" && (
+                <div className="space-y-2 p-3 bg-muted/20 rounded-md border border-border">
+                  <Label className="text-xs font-medium">Select Menu Items (Multiple Choice)</Label>
+                  {standardMenuOptions.map((option) => (
+                    <div key={option.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`standard-${index}-${option.id}`}
+                        disabled={disabled}
+                        checked={diningSelections[index]?.standardOptions?.includes(option.id) || false}
+                        onCheckedChange={() => toggleStandardOption(index, option.id)}
+                      />
+                      <label
+                        htmlFor={`standard-${index}-${option.id}`}
+                        className="text-sm cursor-pointer flex-1"
+                      >
+                        {option.name} (${option.price})
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Custom Catering Options */}
+              {diningSelections[index]?.type === "custom" && (
+                <div className="space-y-2 p-3 bg-muted/20 rounded-md border border-border">
+                  <Label className="text-xs font-medium">Select Dietary Requirements (Multiple Choice)</Label>
+                  {customCateringOptions.map((option) => (
+                    <div key={option.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`custom-${index}-${option.id}`}
+                        disabled={disabled}
+                        checked={diningSelections[index]?.customOptions?.includes(option.id) || false}
+                        onCheckedChange={() => toggleCustomOption(index, option.id)}
+                      />
+                      <label
+                        htmlFor={`custom-${index}-${option.id}`}
+                        className="text-sm cursor-pointer flex-1"
+                      >
+                        {option.name} (${option.price})
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}
