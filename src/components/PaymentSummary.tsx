@@ -31,31 +31,23 @@ export const PaymentSummary = ({
         </div>
 
         <div className="space-y-3">
-          {passengerCount === 1 ? (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Flight (1 passenger)</span>
-              <span className="font-medium">${flightCost.toFixed(2)}</span>
-            </div>
-          ) : (
-            <>
-              {Array.from({ length: passengerCount }, (_, i) => {
-                let price = 299;
-                if (i === 1) price = 249;
-                else if (i === 2) price = 199;
-                else if (i >= 3) price = 149;
-                
-                return (
-                  <div key={i} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      Passenger {i + 1}
-                      {i > 0 && <span className="text-xs ml-1 text-primary">(Discounted)</span>}
-                    </span>
-                    <span className="font-medium">${price.toFixed(2)}</span>
-                  </div>
-                );
-              })}
-            </>
-          )}
+          <div className="text-sm font-medium">Flight</div>
+          {Array.from({ length: passengerCount }, (_, i) => {
+            let price = 299;
+            if (i === 1) price = 249;
+            else if (i === 2) price = 199;
+            else if (i >= 3) price = 149;
+            
+            return (
+              <div key={i} className="flex justify-between text-sm pl-4">
+                <span className="text-muted-foreground">
+                  Passenger {i + 1}
+                  {i > 0 && <span className="text-xs ml-1 text-primary">(Discounted)</span>}
+                </span>
+                <span className="font-medium">${price.toFixed(2)}</span>
+              </div>
+            );
+          })}
           {groundTransport > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Ground Transport</span>
