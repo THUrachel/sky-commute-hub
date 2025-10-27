@@ -434,6 +434,7 @@ const Index = () => {
               )}
 
               <PassengerWeightForm
+                disabled={!pickup || !destination}
                 passengerCount={passengerCount}
                 onPassengerCountChange={(count) => {
                   setPassengerCount(count);
