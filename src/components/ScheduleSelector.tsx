@@ -1,9 +1,9 @@
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -38,10 +38,15 @@ export const ScheduleSelector = ({
     onDateTimeChange(formatted);
   };
 
-  const handleTimeChange = (time: string) => {
+  const handleTimeChange = (type: 'hour' | 'minute', value: string) => {
     const date = selectedDate || new Date();
-    const [hours, minutes] = time.split(':');
-    date.setHours(parseInt(hours), parseInt(minutes));
+    const [currentHours, currentMinutes] = selectedTime ? selectedTime.split(':') : ['12', '00'];
+    
+    if (type === 'hour') {
+      date.setHours(parseInt(value), parseInt(currentMinutes));
+    } else {
+      date.setHours(parseInt(currentHours), parseInt(value));
+    }
     
     const formatted = formatToDateTimeLocal(date);
     onDateTimeChange(formatted);
@@ -55,6 +60,12 @@ export const ScheduleSelector = ({
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
+
+  const [hours, minutes] = selectedTime ? selectedTime.split(':') : ['12', '00'];
+
+  // Generate hour and minute options
+  const hourOptions = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
+  const minuteOptions = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
 
   return (
     <div className="space-y-3">
@@ -88,12 +99,37 @@ export const ScheduleSelector = ({
           </PopoverContent>
         </Popover>
         
-        <Input
-          type="time"
-          value={selectedTime}
-          onChange={(e) => handleTimeChange(e.target.value)}
-          className="h-12 bg-card w-full"
-        />
+        
+        <div className="flex gap-2">
+          <Select value={hours} onValueChange={(value) => handleTimeChange('hour', value)}>
+            <SelectTrigger className="h-12 bg-card flex-1">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <SelectValue placeholder="Hour" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              {hourOptions.map((hour) => (
+                <SelectItem key={hour} value={hour}>
+                  {hour}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select value={minutes} onValueChange={(value) => handleTimeChange('minute', value)}>
+            <SelectTrigger className="h-12 bg-card flex-1">
+              <SelectValue placeholder="Min" />
+            </SelectTrigger>
+            <SelectContent>
+              {minuteOptions.map((minute) => (
+                <SelectItem key={minute} value={minute}>
+                  {minute}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
