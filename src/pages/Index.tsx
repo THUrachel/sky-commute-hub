@@ -326,6 +326,7 @@ const Index = () => {
                 groundTransport={costs.groundTransport}
                 dining={costs.dining}
                 passengerCount={passengerCount}
+                selectedDining={dining}
                 onBooking={handleBooking}
                 isLoading={isLoading}
               />

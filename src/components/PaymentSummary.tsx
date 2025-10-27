@@ -2,12 +2,14 @@ import { CreditCard } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { diningOptions } from "@/components/DiningOptionsSelector";
 
 interface PaymentSummaryProps {
   flightCost: number;
   groundTransport: number;
   dining: number;
   passengerCount: number;
+  selectedDining: string[];
   onBooking: () => void;
   isLoading?: boolean;
 }
@@ -17,6 +19,7 @@ export const PaymentSummary = ({
   groundTransport,
   dining,
   passengerCount,
+  selectedDining,
   onBooking,
   isLoading = false,
 }: PaymentSummaryProps) => {
@@ -57,13 +60,19 @@ export const PaymentSummary = ({
               </div>
             </>
           )}
-          {dining > 0 && (
+          {selectedDining.length > 0 && (
             <>
               <div className="font-semibold mt-3">Dining</div>
-              <div className="flex justify-between text-sm pl-4">
-                <span className="text-muted-foreground">Meal Service</span>
-                <span className="font-medium">${dining.toFixed(2)}</span>
-              </div>
+              {selectedDining.map((diningId) => {
+                const option = diningOptions.find(opt => opt.id === diningId);
+                if (!option) return null;
+                return (
+                  <div key={diningId} className="flex justify-between text-sm pl-4">
+                    <span className="text-muted-foreground">{option.name}</span>
+                    <span className="font-medium">${option.price.toFixed(2)}</span>
+                  </div>
+                );
+              })}
             </>
           )}
         </div>
