@@ -207,9 +207,12 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
 
     setFilteredVertiports(sorted);
     
-    // Auto-select the closest vertiport
+    // Auto-select the closest vertiport, but skip if it matches otherVertiportValue
     if (sorted.length > 0) {
-      onChange(sorted[0].id);
+      const vertiportToSelect = sorted[0].id === otherVertiportValue && sorted.length > 1
+        ? sorted[1].id
+        : sorted[0].id;
+      onChange(vertiportToSelect);
     }
   };
 
