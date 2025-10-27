@@ -31,7 +31,7 @@ export const PaymentSummary = ({
         </div>
 
         <div className="space-y-3">
-          <div className="text-sm font-medium">Flight</div>
+          <div className="font-semibold">Flight</div>
           {Array.from({ length: passengerCount }, (_, i) => {
             let price = 299;
             if (i === 1) price = 249;
@@ -49,16 +49,22 @@ export const PaymentSummary = ({
             );
           })}
           {groundTransport > 0 && (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Ground Transport</span>
-              <span className="font-medium">${groundTransport.toFixed(2)}</span>
-            </div>
+            <>
+              <div className="font-semibold mt-3">Ground Transport</div>
+              <div className="flex justify-between text-sm pl-4">
+                <span className="text-muted-foreground">Transportation</span>
+                <span className="font-medium">${groundTransport.toFixed(2)}</span>
+              </div>
+            </>
           )}
           {dining > 0 && (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Dining</span>
-              <span className="font-medium">${dining.toFixed(2)}</span>
-            </div>
+            <>
+              <div className="font-semibold mt-3">Dining</div>
+              <div className="flex justify-between text-sm pl-4">
+                <span className="text-muted-foreground">Meal Service</span>
+                <span className="font-medium">${dining.toFixed(2)}</span>
+              </div>
+            </>
           )}
         </div>
 
