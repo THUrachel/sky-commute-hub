@@ -25,6 +25,43 @@ export const PaymentSummary = ({
 }: PaymentSummaryProps) => {
   const total = flightCost + groundTransport + dining;
 
+  // Calculate individual passenger prices based on total flight cost
+  const getPassengerPrices = () => {
+    if (passengerCount === 0 || flightCost === 0) return [];
+    
+    const prices: number[] = [];
+    let remainingCost = flightCost;
+    
+    // Calculate what the base price per passenger should be by working backwards
+    // from the total flight cost given the discount structure
+    let totalMultiplier = 0;
+    for (let i = 1; i <= passengerCount; i++) {
+      if (i === 1) totalMultiplier += 1;
+      else if (i === 2) totalMultiplier += 0.83;
+      else if (i === 3) totalMultiplier += 0.67;
+      else totalMultiplier += 0.50;
+    }
+    
+    const basePrice = flightCost / totalMultiplier;
+    
+    // Now calculate each passenger's price
+    for (let i = 1; i <= passengerCount; i++) {
+      if (i === 1) {
+        prices.push(Math.round(basePrice));
+      } else if (i === 2) {
+        prices.push(Math.round(basePrice * 0.83));
+      } else if (i === 3) {
+        prices.push(Math.round(basePrice * 0.67));
+      } else {
+        prices.push(Math.round(basePrice * 0.50));
+      }
+    }
+    
+    return prices;
+  };
+
+  const passengerPrices = getPassengerPrices();
+
   return (
     <Card className="p-6 bg-card border-border shadow-elevated">
       <div className="space-y-4">
@@ -35,22 +72,15 @@ export const PaymentSummary = ({
 
         <div className="space-y-3">
           <div className="font-semibold">Flight</div>
-          {Array.from({ length: passengerCount }, (_, i) => {
-            let price = 299;
-            if (i === 1) price = 249;
-            else if (i === 2) price = 199;
-            else if (i >= 3) price = 149;
-            
-            return (
-              <div key={i} className="flex justify-between text-sm pl-4">
-                <span className="text-muted-foreground">
-                  Passenger {i + 1}
-                  {i > 0 && <span className="text-xs ml-1 text-primary">(Discounted)</span>}
-                </span>
-                <span className="font-medium">${price.toFixed(2)}</span>
-              </div>
-            );
-          })}
+          {passengerPrices.map((price, i) => (
+            <div key={i} className="flex justify-between text-sm pl-4">
+              <span className="text-muted-foreground">
+                Passenger {i + 1}
+                {i > 0 && <span className="text-xs ml-1 text-primary">(Discounted)</span>}
+              </span>
+              <span className="font-medium">${price.toFixed(2)}</span>
+            </div>
+          ))}
           {groundTransport > 0 && (
             <>
               <div className="font-semibold mt-3">Ground Transport</div>
