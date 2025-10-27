@@ -30,7 +30,7 @@ const Index = () => {
   const [passengerWeights, setPassengerWeights] = useState<string[]>(["150"]);
   const [luggageWeights, setLuggageWeights] = useState<string[]>(["25"]);
   const [groundTransport, setGroundTransport] = useState<string>("");
-  const [dining, setDining] = useState<string[][]>([]);
+  const [dining, setDining] = useState<string[]>([]);
   const [flightCost, setFlightCost] = useState(0);
 
   // Check authentication status and redirect if not logged in
@@ -195,11 +195,9 @@ const Index = () => {
     const transportCost = !groundTransport || groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
     
     // Calculate total dining cost across all passengers
-    const diningCost = dining.reduce((total, passengerDining) => {
-      return total + passengerDining.reduce((passengerTotal, optionId) => {
-        const option = diningOptions.find(opt => opt.id === optionId);
-        return passengerTotal + (option?.price || 0);
-      }, 0);
+    const diningCost = dining.reduce((total, optionId) => {
+      const option = diningOptions.find(opt => opt.id === optionId);
+      return total + (option?.price || 0);
     }, 0);
     
     return { flightCost, groundTransport: transportCost, dining: diningCost };
@@ -451,7 +449,7 @@ const Index = () => {
                   });
                   setDining(prev => {
                     const newDining = [...prev];
-                    while (newDining.length < count) newDining.push([]);
+                    while (newDining.length < count) newDining.push("none");
                     return newDining.slice(0, count);
                   });
                 }}

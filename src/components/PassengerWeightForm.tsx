@@ -1,11 +1,12 @@
-import { Users, Weight, UtensilsCrossed } from "lucide-react";
+import { Users } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 export const diningOptions = [
+  { id: "none", name: "No Dining Service", price: 0 },
   { id: "gourmet", name: "Gourmet In-Flight Meal", price: 45 },
   { id: "snacks", name: "Premium Snacks & Beverages", price: 20 },
   { id: "champagne", name: "Champagne Service", price: 35 },
@@ -20,8 +21,8 @@ interface PassengerWeightFormProps {
   onPassengerWeightsChange: (weights: string[]) => void;
   luggageWeights: string[];
   onLuggageWeightsChange: (weights: string[]) => void;
-  diningOptions: string[][];
-  onDiningOptionsChange: (options: string[][]) => void;
+  diningOptions: string[];
+  onDiningOptionsChange: (options: string[]) => void;
 }
 
 export const PassengerWeightForm = ({
@@ -47,18 +48,9 @@ export const PassengerWeightForm = ({
     onLuggageWeightsChange(newWeights);
   };
 
-  const updateDiningOption = (passengerIndex: number, optionId: string, checked: boolean) => {
+  const updateDiningOption = (passengerIndex: number, optionId: string) => {
     const newDining = [...selectedDining];
-    if (!newDining[passengerIndex]) {
-      newDining[passengerIndex] = [];
-    }
-    
-    if (checked) {
-      newDining[passengerIndex] = [...newDining[passengerIndex], optionId];
-    } else {
-      newDining[passengerIndex] = newDining[passengerIndex].filter(id => id !== optionId);
-    }
-    
+    newDining[passengerIndex] = optionId;
     onDiningOptionsChange(newDining);
   };
   return (
@@ -150,26 +142,22 @@ export const PassengerWeightForm = ({
               <Label className="text-xs text-muted-foreground">
                 Dining Options
               </Label>
-              <div className="grid grid-cols-2 gap-3">
-                {diningOptions.map((option) => (
-                  <div key={option.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`dining-${index}-${option.id}`}
-                      disabled={disabled}
-                      checked={selectedDining[index]?.includes(option.id) || false}
-                      onCheckedChange={(checked) => 
-                        updateDiningOption(index, option.id, checked as boolean)
-                      }
-                    />
-                    <label
-                      htmlFor={`dining-${index}-${option.id}`}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                    >
-                      {option.name} (${option.price})
-                    </label>
-                  </div>
-                ))}
-              </div>
+              <Select
+                disabled={disabled}
+                value={selectedDining[index] || "none"}
+                onValueChange={(value) => updateDiningOption(index, value)}
+              >
+                <SelectTrigger className="h-12 bg-card">
+                  <SelectValue placeholder="Select dining option" />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border z-50">
+                  {diningOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id} className="cursor-pointer">
+                      {option.name} {option.price > 0 && `($${option.price})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         ))}

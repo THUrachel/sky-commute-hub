@@ -9,7 +9,7 @@ interface PaymentSummaryProps {
   groundTransport: number;
   dining: number;
   passengerCount: number;
-  selectedDining: string[][];
+  selectedDining: string[];
   onBooking: () => void;
   isLoading?: boolean;
 }
@@ -90,21 +90,20 @@ export const PaymentSummary = ({
               </div>
             </>
           )}
-          {selectedDining.some(arr => arr && arr.length > 0) && (
+          {selectedDining.some(option => option && option !== "none") && (
             <>
               <div className="font-semibold mt-3">Dining</div>
-              {selectedDining.flatMap((passengerDining, passengerIndex) => 
-                passengerDining.map((diningId) => {
-                  const option = diningOptions.find(opt => opt.id === diningId);
-                  if (!option) return null;
-                  return (
-                    <div key={`${passengerIndex}-${diningId}`} className="flex justify-between text-sm pl-4">
-                      <span className="text-muted-foreground">P{passengerIndex + 1} - {option.name}</span>
-                      <span className="font-medium">${option.price.toFixed(2)}</span>
-                    </div>
-                  );
-                })
-              )}
+              {selectedDining.map((optionId, passengerIndex) => {
+                if (!optionId || optionId === "none") return null;
+                const option = diningOptions.find(opt => opt.id === optionId);
+                if (!option) return null;
+                return (
+                  <div key={passengerIndex} className="flex justify-between text-sm pl-4">
+                    <span className="text-muted-foreground">P{passengerIndex + 1} - {option.name}</span>
+                    <span className="font-medium">${option.price.toFixed(2)}</span>
+                  </div>
+                );
+              })}
             </>
           )}
         </div>

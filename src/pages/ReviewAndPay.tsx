@@ -18,7 +18,7 @@ interface BookingData {
   passenger_weights: string[];
   luggage_weights: string[];
   ground_transport: string;
-  dining_options: string[][];
+  dining_options: string[];
   flight_cost: number;
   ground_transport_cost: number;
   dining_cost: number;
@@ -181,7 +181,7 @@ const ReviewAndPay = () => {
               </>
             )}
 
-            {bookingData.dining_options && bookingData.dining_options.some(arr => arr && arr.length > 0) && (
+            {bookingData.dining_options && bookingData.dining_options.some(option => option && option !== "none") && (
               <>
                 <Separator />
                 <div className="space-y-2">
@@ -190,17 +190,17 @@ const ReviewAndPay = () => {
                     <span className="font-medium">Dining Options</span>
                   </div>
                   <div className="ml-6 space-y-2">
-                    {bookingData.dining_options.map((passengerDining, index) => (
-                      passengerDining && passengerDining.length > 0 ? (
+                    {bookingData.dining_options.map((optionId, index) => {
+                      if (!optionId || optionId === "none") return null;
+                      const option = diningOptions.find(opt => opt.id === optionId);
+                      if (!option) return null;
+                      return (
                         <div key={index} className="text-sm">
                           <span className="font-medium">Passenger {index + 1}:</span>{" "}
-                          {passengerDining.map(id => {
-                            const option = diningOptions.find(opt => opt.id === id);
-                            return option?.name;
-                          }).filter(Boolean).join(", ")}
+                          {option.name}
                         </div>
-                      ) : null
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </>
