@@ -19,6 +19,7 @@ interface VertiportSelectorProps {
   onZipcodeChange: (value: string) => void;
   serviceArea?: string;
   disabled?: boolean;
+  otherVertiportValue?: string;
 }
 
 interface Vertiport {
@@ -115,7 +116,7 @@ const getStateFromZipcode = (zipcode: string): string[] => {
   return [];
 };
 
-export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea, disabled = false }: VertiportSelectorProps) => {
+export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea, disabled = false, otherVertiportValue }: VertiportSelectorProps) => {
   const [filteredVertiports, setFilteredVertiports] = useState<Vertiport[]>([]);
   const [allVertiports, setAllVertiports] = useState<Vertiport[]>([]);
   const [zipcodeError, setZipcodeError] = useState<string>("");
@@ -281,11 +282,19 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
                 <SelectValue placeholder={filteredVertiports.length === 0 ? "No vertiports available in this area" : "Select a vertiport"} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-popover">
-                {filteredVertiports.map((vertiport) => (
-                  <SelectItem key={vertiport.id} value={vertiport.id} className="pl-3">
-                    {vertiport.name} ({vertiport.city}, {vertiport.state})
-                  </SelectItem>
-                ))}
+                {filteredVertiports.map((vertiport) => {
+                  const isSelected = vertiport.id === otherVertiportValue;
+                  return (
+                    <SelectItem 
+                      key={vertiport.id} 
+                      value={vertiport.id} 
+                      className={`pl-3 ${isSelected ? 'opacity-40 cursor-not-allowed' : ''}`}
+                      disabled={isSelected}
+                    >
+                      {vertiport.name} ({vertiport.city}, {vertiport.state})
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>

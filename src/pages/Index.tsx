@@ -305,6 +305,7 @@ const Index = () => {
                   onZipcodeChange={setDestinationZipcode}
                   serviceArea={serviceArea}
                   disabled={!pickup}
+                  otherVertiportValue={pickup}
                 />
               </div>
 
