@@ -136,8 +136,15 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
     fetchVertiports();
   }, []);
 
+  // Filter vertiports when zipcode changes (including when restored from navigation state)
+  useEffect(() => {
+    if (zipcode && zipcode.length === 5) {
+      filterVertiportsByZipcode(zipcode, false); // Don't auto-select when restoring
+    }
+  }, [zipcode, serviceArea]);
+
   // Filter vertiports based on zipcode
-  const filterVertiportsByZipcode = async (zip: string) => {
+  const filterVertiportsByZipcode = async (zip: string, autoSelect: boolean = true) => {
     if (!zip || zip.length < 5) {
       setFilteredVertiports([]);
       setZipcodeError("");
@@ -207,8 +214,8 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
 
     setFilteredVertiports(sorted);
     
-    // Auto-select the closest vertiport, but skip if it matches otherVertiportValue
-    if (sorted.length > 0) {
+    // Auto-select the closest vertiport only if autoSelect is true and no value is already set
+    if (autoSelect && sorted.length > 0 && !value) {
       const vertiportToSelect = sorted[0].id === otherVertiportValue && sorted.length > 1
         ? sorted[1].id
         : sorted[0].id;
@@ -220,7 +227,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
     // Only allow numeric input and limit to 5 digits
     const sanitized = newZipcode.replace(/\D/g, '').slice(0, 5);
     onZipcodeChange(sanitized);
-    filterVertiportsByZipcode(sanitized);
+    filterVertiportsByZipcode(sanitized, true);
     
     // Clear selected vertiport when zipcode changes
     if (value && sanitized !== zipcode) {
