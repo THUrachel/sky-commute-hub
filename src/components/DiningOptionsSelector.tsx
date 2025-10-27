@@ -41,7 +41,7 @@ export const DiningOptionsSelector = ({
       <div className="ml-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline" className="w-full max-w-md justify-start">
               {selectedDining.length > 0
                 ? `${selectedDining.length} option${selectedDining.length > 1 ? 's' : ''} selected`
                 : "Select dining options"}

@@ -34,7 +34,7 @@ export const GroundTransportSelector = ({
       </Label>
       <div className="ml-6">
         <Select value={selectedTransport} onValueChange={onTransportChange}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full max-w-md">
             <SelectValue placeholder="Select ground transport option">
               {selectedOption && <span>{selectedOption.name}</span>}
             </SelectValue>

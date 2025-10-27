@@ -74,7 +74,7 @@ export const PassengerWeightForm = ({
             <Label className="text-sm font-medium">
               Passenger {index + 1}
             </Label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 max-w-md">
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground">
                   Passenger Weight (lbs)
