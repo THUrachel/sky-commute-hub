@@ -256,19 +256,20 @@ const Index = () => {
           {/* Booking Form */}
           <div className="lg:col-span-2">
             <div className="bg-card rounded-2xl shadow-elevated p-6 md:p-8 space-y-6 border border-border">
-              <h2 className="text-2xl font-bold">Book Your Flight</h2>
-
-              <ServiceAreaSelector
-                value={serviceArea}
-                onChange={(newArea) => {
-                  setServiceArea(newArea);
-                  // Clear selections when service area changes
-                  setPickup("");
-                  setPickupZipcode("");
-                  setDestination("");
-                  setDestinationZipcode("");
-                }}
-              />
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <h2 className="text-2xl font-bold">Book Your Flight</h2>
+                <ServiceAreaSelector
+                  value={serviceArea}
+                  onChange={(newArea) => {
+                    setServiceArea(newArea);
+                    // Clear selections when service area changes
+                    setPickup("");
+                    setPickupZipcode("");
+                    setDestination("");
+                    setDestinationZipcode("");
+                  }}
+                />
+              </div>
 
               <RideTypeSelector value={rideType} onChange={setRideType} />
 

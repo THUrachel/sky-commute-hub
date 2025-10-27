@@ -41,25 +41,20 @@ export const ServiceAreaSelector = ({ value, onChange }: ServiceAreaSelectorProp
   }, []);
 
   return (
-    <div className="space-y-3 p-6 bg-accent/5 rounded-xl border border-accent/20">
-      <Label className="text-sm font-medium flex items-center gap-2">
-        <Globe className="h-5 w-5 text-accent" />
-        Service Area
-      </Label>
-      <div className="ml-7">
-        <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-12 bg-card border-border focus:border-accent transition-colors">
-            <SelectValue placeholder="Select your service area" />
-          </SelectTrigger>
-          <SelectContent className="z-50 bg-popover">
-            {serviceAreas.map((area) => (
-              <SelectItem key={area} value={area}>
-                {area}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="flex items-center gap-2">
+      <Globe className="h-4 w-4 text-muted-foreground" />
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="h-9 w-[200px] bg-card border-border focus:border-accent transition-colors">
+          <SelectValue placeholder="Select service area" />
+        </SelectTrigger>
+        <SelectContent className="z-50 bg-popover">
+          {serviceAreas.map((area) => (
+            <SelectItem key={area} value={area}>
+              {area}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
