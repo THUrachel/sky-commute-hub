@@ -136,8 +136,7 @@ export const PassengerWeightForm = ({
             </div>
 
             <div className="space-y-3">
-              <Label className="text-xs text-muted-foreground flex items-center gap-2">
-                <UtensilsCrossed className="h-3 w-3" />
+              <Label className="text-xs text-muted-foreground">
                 Dining Options
               </Label>
               <div className="grid grid-cols-2 gap-3">
