@@ -256,7 +256,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
           </div>
         )}
         
-        {zipcode.length >= 3 && (
+        {filteredVertiports.length > 0 && (
           <div>
             <Label htmlFor="vertiport" className="text-xs text-muted-foreground mb-1.5 block">
               Select Vertiport
