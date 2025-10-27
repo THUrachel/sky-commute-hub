@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plane, LogOut, User, ArrowLeftRight, ArrowDownUp } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import heroImage from "@/assets/hero-evtol.jpg";
 import { Button } from "@/components/ui/button";
 import { LocationInput } from "@/components/LocationInput";
@@ -18,6 +18,7 @@ import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [serviceArea, setServiceArea] = useState("San Francisco Bay Area");
@@ -59,6 +60,30 @@ const Index = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  // Restore booking data from navigation state (when coming back from review page)
+  useEffect(() => {
+    const bookingData = location.state as any;
+    if (bookingData) {
+      setPickup(bookingData.pickup_location || "");
+      setDestination(bookingData.destination || "");
+      setRideType(bookingData.ride_type || "on-demand");
+      
+      // Restore datetime from separate date and time fields
+      if (bookingData.scheduled_date && bookingData.scheduled_time) {
+        setDateTime(`${bookingData.scheduled_date}T${bookingData.scheduled_time}`);
+      }
+      
+      setPassengerCount(bookingData.passenger_count || 1);
+      setPassengerWeights(bookingData.passenger_weights || ["150"]);
+      setLuggageWeights(bookingData.luggage_weights || ["25"]);
+      setGroundTransport(bookingData.ground_transport || "");
+      setDining(bookingData.dining_options || []);
+      
+      // Clear the state so it doesn't persist on future visits
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.state, location.pathname, navigate]);
 
   // Check for matching vertiports and auto-switch if needed
   useEffect(() => {
