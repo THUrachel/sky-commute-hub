@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plane, LogOut, User, ArrowLeftRight } from "lucide-react";
+import { Plane, LogOut, User, ArrowLeftRight, ArrowDownUp } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-evtol.jpg";
@@ -341,6 +341,22 @@ const Index = () => {
                     serviceArea={serviceArea}
                     otherVertiportValue={destination}
                   />
+                  
+                  {/* Swap Button - Mobile (between sections) */}
+                  <div className="flex justify-center md:hidden -my-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={handleSwapVertiports}
+                      disabled={!pickup || !destination}
+                      className="h-10 w-10 rounded-full bg-background shadow-lg border-2 hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
+                      aria-label="Swap pickup and destination"
+                    >
+                      <ArrowDownUp className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
                   <VertiportSelector
                     label="Destination Vertiport"
                     value={destination}
@@ -352,7 +368,7 @@ const Index = () => {
                   />
                 </div>
                 
-                {/* Swap Button */}
+                {/* Swap Button - Desktop (centered between columns) */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
                   <Button
                     type="button"
