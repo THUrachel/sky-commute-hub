@@ -452,10 +452,6 @@ const Index = () => {
                 onLuggageWeightsChange={setLuggageWeights}
               />
 
-              <GroundTransportSelector
-                selectedTransport={groundTransport}
-                onTransportChange={setGroundTransport}
-              />
 
               <DiningOptionsSelector
                 selectedDining={dining}
