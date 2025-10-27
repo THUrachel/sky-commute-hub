@@ -41,10 +41,10 @@ export const ServiceAreaSelector = ({ value, onChange }: ServiceAreaSelectorProp
   }, []);
 
   return (
-    <div className="flex items-center gap-2 p-2 rounded-lg border-2 border-accent/50 bg-accent/5 transition-all hover:border-accent">
+    <div className="flex items-center gap-2">
       <Globe className="h-4 w-4 text-accent" />
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-9 w-[200px] bg-background border-2 border-accent/30 focus:border-accent transition-colors font-semibold">
+        <SelectTrigger className="h-9 w-[280px] bg-background border-2 border-accent/30 focus:border-accent transition-colors font-semibold">
           <SelectValue placeholder="Select service area" />
         </SelectTrigger>
         <SelectContent className="z-50 bg-popover">
