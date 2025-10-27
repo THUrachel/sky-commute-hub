@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plane } from "lucide-react";
+import { Plane, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/hero-evtol.jpg";
@@ -242,6 +243,16 @@ const Auth = () => {
             </TabsContent>
           </div>
         </Tabs>
+
+        <Alert className="mt-6">
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            <strong>To-Business Services:</strong> Currently in beta mode. For business transportation inquiries, please contact our customer service team at{" "}
+            <a href="mailto:business@aeolus.com" className="underline">
+              business@aeolus.com
+            </a>
+          </AlertDescription>
+        </Alert>
       </Card>
     </div>
   );
