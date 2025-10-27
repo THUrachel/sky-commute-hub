@@ -268,27 +268,27 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
             <p className="text-sm text-destructive">{zipcodeError}</p>
           </div>
         )}
-      </div>
         
-      {zipcode.length === 5 && filteredVertiports.length > 0 && (
-        <div className="space-y-3">
-          <Label htmlFor="vertiport" className="text-xs text-muted-foreground mb-1.5 block">
-            Select Vertiport
-          </Label>
-          <Select value={value} onValueChange={onChange} disabled={filteredVertiports.length === 0}>
-            <SelectTrigger id="vertiport" className="h-12 bg-card border-border focus:border-primary transition-colors">
-              <SelectValue placeholder={filteredVertiports.length === 0 ? "No vertiports available in this area" : "Select a vertiport"} />
-            </SelectTrigger>
-            <SelectContent className="z-50 bg-popover">
-              {filteredVertiports.map((vertiport) => (
-                <SelectItem key={vertiport.id} value={vertiport.id}>
-                  {vertiport.name} ({vertiport.city}, {vertiport.state})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+        {zipcode.length === 5 && filteredVertiports.length > 0 && (
+          <div>
+            <Label htmlFor="vertiport" className="text-xs text-muted-foreground mb-1.5 block">
+              Select Vertiport
+            </Label>
+            <Select value={value} onValueChange={onChange} disabled={filteredVertiports.length === 0}>
+              <SelectTrigger id="vertiport" className="h-12 bg-card border-border focus:border-primary transition-colors">
+                <SelectValue placeholder={filteredVertiports.length === 0 ? "No vertiports available in this area" : "Select a vertiport"} />
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover">
+                {filteredVertiports.map((vertiport) => (
+                  <SelectItem key={vertiport.id} value={vertiport.id}>
+                    {vertiport.name} ({vertiport.city}, {vertiport.state})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
