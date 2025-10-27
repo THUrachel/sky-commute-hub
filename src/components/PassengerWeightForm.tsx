@@ -1,8 +1,16 @@
-import { Users, Weight } from "lucide-react";
+import { Users, Weight, UtensilsCrossed } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+
+export const diningOptions = [
+  { id: "breakfast", name: "Breakfast", price: 25 },
+  { id: "lunch", name: "Lunch", price: 35 },
+  { id: "dinner", name: "Dinner", price: 45 },
+  { id: "snacks", name: "Snacks & Beverages", price: 15 },
+];
 
 interface PassengerWeightFormProps {
   passengerCount: number;
@@ -11,6 +19,8 @@ interface PassengerWeightFormProps {
   onPassengerWeightsChange: (weights: string[]) => void;
   luggageWeights: string[];
   onLuggageWeightsChange: (weights: string[]) => void;
+  diningOptions: string[][];
+  onDiningOptionsChange: (options: string[][]) => void;
 }
 
 export const PassengerWeightForm = ({
@@ -20,6 +30,8 @@ export const PassengerWeightForm = ({
   onPassengerWeightsChange,
   luggageWeights,
   onLuggageWeightsChange,
+  diningOptions: selectedDining,
+  onDiningOptionsChange,
 }: PassengerWeightFormProps) => {
   const updatePassengerWeight = (index: number, value: string) => {
     const newWeights = [...passengerWeights];
@@ -31,6 +43,21 @@ export const PassengerWeightForm = ({
     const newWeights = [...luggageWeights];
     newWeights[index] = value;
     onLuggageWeightsChange(newWeights);
+  };
+
+  const updateDiningOption = (passengerIndex: number, optionId: string, checked: boolean) => {
+    const newDining = [...selectedDining];
+    if (!newDining[passengerIndex]) {
+      newDining[passengerIndex] = [];
+    }
+    
+    if (checked) {
+      newDining[passengerIndex] = [...newDining[passengerIndex], optionId];
+    } else {
+      newDining[passengerIndex] = newDining[passengerIndex].filter(id => id !== optionId);
+    }
+    
+    onDiningOptionsChange(newDining);
   };
   return (
     <div className="space-y-4">
@@ -70,7 +97,7 @@ export const PassengerWeightForm = ({
 
       <div className="space-y-4 ml-6">
         {Array.from({ length: passengerCount }, (_, index) => (
-          <div key={index} className="space-y-2">
+          <div key={index} className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border">
             <Label className="text-sm font-medium">
               Passenger {index + 1}
             </Label>
@@ -105,6 +132,32 @@ export const PassengerWeightForm = ({
                   />
                   <span className="text-sm text-muted-foreground">lbs</span>
                 </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-xs text-muted-foreground flex items-center gap-2">
+                <UtensilsCrossed className="h-3 w-3" />
+                Dining Options
+              </Label>
+              <div className="grid grid-cols-2 gap-3">
+                {diningOptions.map((option) => (
+                  <div key={option.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`dining-${index}-${option.id}`}
+                      checked={selectedDining[index]?.includes(option.id) || false}
+                      onCheckedChange={(checked) => 
+                        updateDiningOption(index, option.id, checked as boolean)
+                      }
+                    />
+                    <label
+                      htmlFor={`dining-${index}-${option.id}`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      {option.name} (${option.price})
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

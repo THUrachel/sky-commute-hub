@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { diningOptions } from "@/components/DiningOptionsSelector";
+import { diningOptions } from "@/components/PassengerWeightForm";
 
 interface BookingData {
   pickup_location: string;
@@ -18,7 +18,7 @@ interface BookingData {
   passenger_weights: string[];
   luggage_weights: string[];
   ground_transport: string;
-  dining_options: string[];
+  dining_options: string[][];
   flight_cost: number;
   ground_transport_cost: number;
   dining_cost: number;
@@ -181,21 +181,26 @@ const ReviewAndPay = () => {
               </>
             )}
 
-            {bookingData.dining_options && bookingData.dining_options.length > 0 && (
+            {bookingData.dining_options && bookingData.dining_options.some(arr => arr && arr.length > 0) && (
               <>
                 <Separator />
-                <div className="flex items-start gap-3">
-                  <UtensilsCrossed className="h-5 w-5 text-primary mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Dining Options</p>
-                    <ul className="font-medium space-y-1">
-                      {bookingData.dining_options.map((optionId) => {
-                        const option = diningOptions.find(opt => opt.id === optionId);
-                        return option ? (
-                          <li key={optionId}>• {option.name}</li>
-                        ) : null;
-                      })}
-                    </ul>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">Dining Options</span>
+                  </div>
+                  <div className="ml-6 space-y-2">
+                    {bookingData.dining_options.map((passengerDining, index) => (
+                      passengerDining && passengerDining.length > 0 ? (
+                        <div key={index} className="text-sm">
+                          <span className="font-medium">Passenger {index + 1}:</span>{" "}
+                          {passengerDining.map(id => {
+                            const option = diningOptions.find(opt => opt.id === id);
+                            return option?.name;
+                          }).filter(Boolean).join(", ")}
+                        </div>
+                      ) : null
+                    ))}
                   </div>
                 </div>
               </>

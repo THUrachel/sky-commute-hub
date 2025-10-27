@@ -9,9 +9,7 @@ import { VertiportSelector } from "@/components/VertiportSelector";
 import { ServiceAreaSelector } from "@/components/ServiceAreaSelector";
 import { RideTypeSelector } from "@/components/RideTypeSelector";
 import { ScheduleSelector } from "@/components/ScheduleSelector";
-import { PassengerWeightForm } from "@/components/PassengerWeightForm";
-import { GroundTransportSelector } from "@/components/GroundTransportSelector";
-import { DiningOptionsSelector, diningOptions } from "@/components/DiningOptionsSelector";
+import { PassengerWeightForm, diningOptions } from "@/components/PassengerWeightForm";
 import { PaymentSummary } from "@/components/PaymentSummary";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -32,7 +30,7 @@ const Index = () => {
   const [passengerWeights, setPassengerWeights] = useState<string[]>(["150"]);
   const [luggageWeights, setLuggageWeights] = useState<string[]>(["25"]);
   const [groundTransport, setGroundTransport] = useState<string>("");
-  const [dining, setDining] = useState<string[]>([]);
+  const [dining, setDining] = useState<string[][]>([]);
   const [flightCost, setFlightCost] = useState(0);
 
   // Check authentication status and redirect if not logged in
@@ -195,10 +193,15 @@ const Index = () => {
 
   const calculateCosts = () => {
     const transportCost = !groundTransport || groundTransport === "none" ? 0 : groundTransport === "standard" ? 75 : groundTransport === "luxury" ? 150 : groundTransport === "electric" ? 90 : 0;
-    const diningCost = dining.reduce((total, diningId) => {
-      const option = diningOptions.find(opt => opt.id === diningId);
-      return total + (option?.price || 0);
+    
+    // Calculate total dining cost across all passengers
+    const diningCost = dining.reduce((total, passengerDining) => {
+      return total + passengerDining.reduce((passengerTotal, optionId) => {
+        const option = diningOptions.find(opt => opt.id === optionId);
+        return passengerTotal + (option?.price || 0);
+      }, 0);
     }, 0);
+    
     return { flightCost, groundTransport: transportCost, dining: diningCost };
   };
 
@@ -445,17 +448,18 @@ const Index = () => {
                     while (newWeights.length < count) newWeights.push("25");
                     return newWeights.slice(0, count);
                   });
+                  setDining(prev => {
+                    const newDining = [...prev];
+                    while (newDining.length < count) newDining.push([]);
+                    return newDining.slice(0, count);
+                  });
                 }}
                 passengerWeights={passengerWeights}
                 onPassengerWeightsChange={setPassengerWeights}
                 luggageWeights={luggageWeights}
                 onLuggageWeightsChange={setLuggageWeights}
-              />
-
-
-              <DiningOptionsSelector
-                selectedDining={dining}
-                onDiningChange={setDining}
+                diningOptions={dining}
+                onDiningOptionsChange={setDining}
               />
             </div>
           </div>
