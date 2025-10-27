@@ -258,7 +258,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
             placeholder="e.g., 94102"
             value={zipcode}
             onChange={(e) => handleZipcodeChange(e.target.value)}
-            className="h-12 bg-card border-border focus:border-primary transition-colors w-32"
+            className="h-12 bg-card border-border focus:border-primary transition-colors w-32 px-3"
             maxLength={5}
           />
         </div>
