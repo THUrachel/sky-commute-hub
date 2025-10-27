@@ -221,7 +221,7 @@ export const PassengerWeightForm = ({
               {/* Standard Menu Options */}
               {diningSelections[index]?.type === "standard" && (
                 <div className="space-y-2 p-3 bg-muted/20 rounded-md border border-border">
-                  <Label className="text-xs font-medium">Select Menu Items (Multiple Choice)</Label>
+                  <Label className="text-xs font-medium">Select Menu Items</Label>
                   {standardMenuOptions.map((option) => (
                     <div key={option.id} className="flex items-center space-x-2">
                       <Checkbox
@@ -244,7 +244,7 @@ export const PassengerWeightForm = ({
               {/* Custom Catering Options */}
               {diningSelections[index]?.type === "custom" && (
                 <div className="space-y-2 p-3 bg-muted/20 rounded-md border border-border">
-                  <Label className="text-xs font-medium">Select Dietary Requirements (Multiple Choice)</Label>
+                  <Label className="text-xs font-medium">Select Dietary Requirements</Label>
                   {customCateringOptions.map((option) => (
                     <div key={option.id} className="flex items-center space-x-2">
                       <Checkbox
