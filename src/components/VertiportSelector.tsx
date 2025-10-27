@@ -18,6 +18,8 @@ interface VertiportSelectorProps {
   zipcode: string;
   onZipcodeChange: (value: string) => void;
   serviceArea?: string;
+  disabled?: boolean;
+  otherVertiportValue?: string;
 }
 
 interface Vertiport {
@@ -114,10 +116,11 @@ const getStateFromZipcode = (zipcode: string): string[] => {
   return [];
 };
 
-export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea }: VertiportSelectorProps) => {
+export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea, disabled = false, otherVertiportValue }: VertiportSelectorProps) => {
   const [filteredVertiports, setFilteredVertiports] = useState<Vertiport[]>([]);
   const [allVertiports, setAllVertiports] = useState<Vertiport[]>([]);
   const [zipcodeError, setZipcodeError] = useState<string>("");
+  const [sameVertiportWarning, setSameVertiportWarning] = useState<boolean>(false);
 
   // Fetch all vertiports on mount
   useEffect(() => {
@@ -211,6 +214,15 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
     }
   };
 
+  // Check if the same vertiport is selected for both pickup and destination
+  useEffect(() => {
+    if (value && otherVertiportValue && value === otherVertiportValue) {
+      setSameVertiportWarning(true);
+    } else {
+      setSameVertiportWarning(false);
+    }
+  }, [value, otherVertiportValue]);
+
   const handleZipcodeChange = (newZipcode: string) => {
     // Only allow numeric input and limit to 5 digits
     const sanitized = newZipcode.replace(/\D/g, '').slice(0, 5);
@@ -234,6 +246,23 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
         <div className="ml-6 p-4 bg-muted/50 rounded-lg border border-dashed border-muted-foreground/20">
           <p className="text-sm text-muted-foreground text-center">
             Please select a service area first
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if disabled (waiting for other vertiport to be selected)
+  if (disabled) {
+    return (
+      <div className="space-y-3 opacity-50">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <MapPin className="h-4 w-4" />
+          {label}
+        </Label>
+        <div className="ml-6 p-4 bg-muted/50 rounded-lg border border-dashed border-muted-foreground/20">
+          <p className="text-sm text-muted-foreground text-center">
+            Please select a pickup vertiport first
           </p>
         </div>
       </div>
@@ -266,6 +295,14 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
         {zipcodeError && zipcode.length === 5 && (
           <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
             <p className="text-sm text-destructive">{zipcodeError}</p>
+          </div>
+        )}
+        
+        {sameVertiportWarning && (
+          <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg">
+            <p className="text-sm text-warning">
+              ⚠️ You have selected the same vertiport for both pickup and destination. Please select different vertiports.
+            </p>
           </div>
         )}
         

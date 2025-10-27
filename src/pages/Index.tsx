@@ -296,6 +296,7 @@ const Index = () => {
                   zipcode={pickupZipcode}
                   onZipcodeChange={setPickupZipcode}
                   serviceArea={serviceArea}
+                  otherVertiportValue={destination}
                 />
                 <VertiportSelector
                   label="Destination Vertiport"
@@ -304,6 +305,8 @@ const Index = () => {
                   zipcode={destinationZipcode}
                   onZipcodeChange={setDestinationZipcode}
                   serviceArea={serviceArea}
+                  disabled={!pickup}
+                  otherVertiportValue={pickup}
                 />
               </div>
 
