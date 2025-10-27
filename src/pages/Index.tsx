@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plane, LogOut, User } from "lucide-react";
+import { Plane, LogOut, User, ArrowLeftRight } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-evtol.jpg";
@@ -235,6 +235,17 @@ const Index = () => {
     }, 100);
   };
 
+  const handleSwapVertiports = () => {
+    // Swap the vertiport selections and zipcodes
+    const tempVertiport = pickup;
+    const tempZipcode = pickupZipcode;
+    
+    setPickup(destination);
+    setPickupZipcode(destinationZipcode);
+    setDestination(tempVertiport);
+    setDestinationZipcode(tempZipcode);
+  };
+
   const costs = calculateCosts();
 
   return (
@@ -319,25 +330,42 @@ const Index = () => {
 
               <RideTypeSelector value={rideType} onChange={setRideType} />
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <VertiportSelector
-                  label="Pickup Vertiport"
-                  value={pickup}
-                  onChange={setPickup}
-                  zipcode={pickupZipcode}
-                  onZipcodeChange={setPickupZipcode}
-                  serviceArea={serviceArea}
-                  otherVertiportValue={destination}
-                />
-                <VertiportSelector
-                  label="Destination Vertiport"
-                  value={destination}
-                  onChange={setDestination}
-                  zipcode={destinationZipcode}
-                  onZipcodeChange={setDestinationZipcode}
-                  serviceArea={serviceArea}
-                  otherVertiportValue={pickup}
-                />
+              <div className="relative">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <VertiportSelector
+                    label="Pickup Vertiport"
+                    value={pickup}
+                    onChange={setPickup}
+                    zipcode={pickupZipcode}
+                    onZipcodeChange={setPickupZipcode}
+                    serviceArea={serviceArea}
+                    otherVertiportValue={destination}
+                  />
+                  <VertiportSelector
+                    label="Destination Vertiport"
+                    value={destination}
+                    onChange={setDestination}
+                    zipcode={destinationZipcode}
+                    onZipcodeChange={setDestinationZipcode}
+                    serviceArea={serviceArea}
+                    otherVertiportValue={pickup}
+                  />
+                </div>
+                
+                {/* Swap Button */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleSwapVertiports}
+                    disabled={!pickup || !destination}
+                    className="h-10 w-10 rounded-full bg-background shadow-lg border-2 hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
+                    aria-label="Swap pickup and destination"
+                  >
+                    <ArrowLeftRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
               {rideType === "scheduled" && (
