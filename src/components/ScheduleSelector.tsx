@@ -17,7 +17,7 @@ export const ScheduleSelector = ({
 }: ScheduleSelectorProps) => {
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-4 max-w-md">
+      <div className="grid grid-cols-2 gap-4 ml-6 max-w-md">
         <div className="space-y-2">
           <Label className="text-sm font-medium flex items-center gap-2">
             <Calendar className="h-4 w-4" />
