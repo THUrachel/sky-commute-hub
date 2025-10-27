@@ -155,6 +155,7 @@ export type Database = {
           created_at: string | null
           latitude: number | null
           longitude: number | null
+          service_area_name: string | null
           updated_at: string | null
           vertiport_id: string
           zipcode: string
@@ -165,6 +166,7 @@ export type Database = {
           created_at?: string | null
           latitude?: number | null
           longitude?: number | null
+          service_area_name?: string | null
           updated_at?: string | null
           vertiport_id: string
           zipcode: string
@@ -175,6 +177,7 @@ export type Database = {
           created_at?: string | null
           latitude?: number | null
           longitude?: number | null
+          service_area_name?: string | null
           updated_at?: string | null
           vertiport_id?: string
           zipcode?: string
