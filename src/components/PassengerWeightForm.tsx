@@ -6,10 +6,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 export const diningOptions = [
-  { id: "breakfast", name: "Breakfast", price: 25 },
-  { id: "lunch", name: "Lunch", price: 35 },
-  { id: "dinner", name: "Dinner", price: 45 },
-  { id: "snacks", name: "Snacks & Beverages", price: 15 },
+  { id: "gourmet", name: "Gourmet In-Flight Meal", price: 45 },
+  { id: "snacks", name: "Premium Snacks & Beverages", price: 20 },
+  { id: "champagne", name: "Champagne Service", price: 35 },
+  { id: "catering", name: "Custom Catering", price: 75 },
 ];
 
 interface PassengerWeightFormProps {
