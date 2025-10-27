@@ -117,6 +117,7 @@ const getStateFromZipcode = (zipcode: string): string[] => {
 export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeChange, serviceArea }: VertiportSelectorProps) => {
   const [filteredVertiports, setFilteredVertiports] = useState<Vertiport[]>([]);
   const [allVertiports, setAllVertiports] = useState<Vertiport[]>([]);
+  const [zipcodeError, setZipcodeError] = useState<string>("");
 
   // Fetch all vertiports on mount
   useEffect(() => {
@@ -137,6 +138,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
   const filterVertiportsByZipcode = async (zip: string) => {
     if (!zip || zip.length < 5) {
       setFilteredVertiports([]);
+      setZipcodeError("");
       return;
     }
 
@@ -154,8 +156,12 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
 
     if (error || !zipcodeData) {
       setFilteredVertiports([]);
+      setZipcodeError("Zipcode you entered is not in the selected service area");
       return;
     }
+
+    // Clear error if zipcode is valid
+    setZipcodeError("");
 
     // Get the associated vertiport and nearby vertiports
     const { data: nearbyVertiports } = await supabase
@@ -243,6 +249,12 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
             maxLength={5}
           />
         </div>
+        
+        {zipcodeError && zipcode.length === 5 && (
+          <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p className="text-sm text-destructive">{zipcodeError}</p>
+          </div>
+        )}
         
         {zipcode.length >= 3 && (
           <div>
