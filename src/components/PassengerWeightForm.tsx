@@ -27,7 +27,6 @@ export interface DiningSelection {
 }
 
 interface PassengerWeightFormProps {
-  disabled?: boolean;
   passengerCount: number;
   onPassengerCountChange: (count: number) => void;
   passengerWeights: string[];
@@ -39,7 +38,6 @@ interface PassengerWeightFormProps {
 }
 
 export const PassengerWeightForm = ({
-  disabled = false,
   passengerCount,
   onPassengerCountChange,
   passengerWeights,
@@ -110,11 +108,6 @@ export const PassengerWeightForm = ({
   };
   return (
     <div className="space-y-4">
-      {disabled && (
-        <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg border border-border">
-          Please select both pickup and destination vertiports to continue
-        </div>
-      )}
       <div className="space-y-2">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Users className="h-4 w-4" />
@@ -125,7 +118,6 @@ export const PassengerWeightForm = ({
             type="button"
             variant="outline"
             size="icon"
-            disabled={disabled}
             onClick={() => onPassengerCountChange(Math.max(1, passengerCount - 1))}
             className="h-10 w-10"
           >
@@ -136,7 +128,6 @@ export const PassengerWeightForm = ({
             type="button"
             variant="outline"
             size="icon"
-            disabled={disabled}
             onClick={() => {
               if (passengerCount >= 3) {
                 toast.error("Maximum 3 passengers allowed");
@@ -165,7 +156,6 @@ export const PassengerWeightForm = ({
                 <div className="flex items-center gap-2 max-w-[140px]">
                   <Input
                     type="number"
-                    disabled={disabled}
                     value={passengerWeights[index] || ""}
                     onChange={(e) => updatePassengerWeight(index, e.target.value)}
                     placeholder="150"
@@ -182,7 +172,6 @@ export const PassengerWeightForm = ({
                 <div className="flex items-center gap-2 max-w-[140px]">
                   <Input
                     type="number"
-                    disabled={disabled}
                     value={luggageWeights[index] || ""}
                     onChange={(e) => updateLuggageWeight(index, e.target.value)}
                     placeholder="25"
@@ -200,7 +189,6 @@ export const PassengerWeightForm = ({
               
               {/* Primary Selection */}
               <Select
-                disabled={disabled}
                 value={diningSelections[index]?.type || "none"}
                 onValueChange={(value: "none" | "standard" | "custom") => updateDiningType(index, value)}
               >
@@ -228,7 +216,6 @@ export const PassengerWeightForm = ({
                     <div key={option.id} className="flex items-center space-x-2">
                       <Checkbox
                         id={`standard-${index}-${option.id}`}
-                        disabled={disabled}
                         checked={diningSelections[index]?.standardOptions?.includes(option.id) || false}
                         onCheckedChange={() => toggleStandardOption(index, option.id)}
                       />
@@ -251,7 +238,6 @@ export const PassengerWeightForm = ({
                     <div key={option.id} className="flex items-center space-x-2">
                       <Checkbox
                         id={`custom-${index}-${option.id}`}
-                        disabled={disabled}
                         checked={diningSelections[index]?.customOptions?.includes(option.id) || false}
                         onCheckedChange={() => toggleCustomOption(index, option.id)}
                       />
