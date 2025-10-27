@@ -9,7 +9,7 @@ import { VertiportSelector } from "@/components/VertiportSelector";
 import { ServiceAreaSelector } from "@/components/ServiceAreaSelector";
 import { RideTypeSelector } from "@/components/RideTypeSelector";
 import { ScheduleSelector } from "@/components/ScheduleSelector";
-import { PassengerWeightForm, DiningSelection, standardMenuOptions, customCateringOptions } from "@/components/PassengerWeightForm";
+import { PassengerWeightForm, DiningSelection, standardMenuOptions, CUSTOM_CATERING_PRICE } from "@/components/PassengerWeightForm";
 import { PaymentSummary } from "@/components/PaymentSummary";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -201,11 +201,9 @@ const Index = () => {
           const option = standardMenuOptions.find(opt => opt.id === optId);
           return optTotal + (option?.price || 0);
         }, 0);
-      } else if (selection.type === "custom" && selection.customOptions) {
-        return total + selection.customOptions.reduce((optTotal, optId) => {
-          const option = customCateringOptions.find(opt => opt.id === optId);
-          return optTotal + (option?.price || 0);
-        }, 0);
+      } else if (selection.type === "custom") {
+        // Flat rate for custom catering regardless of options selected
+        return total + CUSTOM_CATERING_PRICE;
       }
       return total;
     }, 0);

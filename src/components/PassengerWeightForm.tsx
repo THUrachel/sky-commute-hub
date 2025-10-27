@@ -13,10 +13,12 @@ export const standardMenuOptions = [
 ];
 
 export const customCateringOptions = [
-  { id: "vegetarian", name: "Vegetarian", price: 25 },
-  { id: "gluten-free", name: "Gluten Free", price: 25 },
-  { id: "lactose-free", name: "Lactose Free", price: 25 },
+  { id: "vegetarian", name: "Vegetarian" },
+  { id: "gluten-free", name: "Gluten Free" },
+  { id: "lactose-free", name: "Lactose Free" },
 ];
+
+export const CUSTOM_CATERING_PRICE = 50;
 
 export interface DiningSelection {
   type: "none" | "standard" | "custom";
@@ -213,7 +215,7 @@ export const PassengerWeightForm = ({
                     Standard Menu
                   </SelectItem>
                   <SelectItem value="custom" className="cursor-pointer">
-                    Custom Catering
+                    Custom Catering ($50)
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -257,7 +259,7 @@ export const PassengerWeightForm = ({
                         htmlFor={`custom-${index}-${option.id}`}
                         className="text-sm cursor-pointer flex-1"
                       >
-                        {option.name} (${option.price})
+                        {option.name}
                       </label>
                     </div>
                   ))}

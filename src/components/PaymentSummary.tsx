@@ -2,7 +2,7 @@ import { CreditCard } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { DiningSelection, standardMenuOptions, customCateringOptions } from "@/components/PassengerWeightForm";
+import { DiningSelection, standardMenuOptions, CUSTOM_CATERING_PRICE } from "@/components/PassengerWeightForm";
 
 interface PaymentSummaryProps {
   flightCost: number;
@@ -108,16 +108,12 @@ export const PaymentSummary = ({
                         </div>
                       );
                     })}
-                    {selection.type === "custom" && selection.customOptions?.map(optId => {
-                      const option = customCateringOptions.find(opt => opt.id === optId);
-                      if (!option) return null;
-                      return (
-                        <div key={`${passengerIndex}-${optId}`} className="flex justify-between text-sm pl-4">
-                          <span className="text-muted-foreground">P{passengerIndex + 1} - Custom: {option.name}</span>
-                          <span className="font-medium">${option.price.toFixed(2)}</span>
-                        </div>
-                      );
-                    })}
+                    {selection.type === "custom" && (
+                      <div className="flex justify-between text-sm pl-4">
+                        <span className="text-muted-foreground">P{passengerIndex + 1} - Custom Catering</span>
+                        <span className="font-medium">${CUSTOM_CATERING_PRICE.toFixed(2)}</span>
+                      </div>
+                    )}
                   </div>
                 );
               })}

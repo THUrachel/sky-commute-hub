@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { DiningSelection, standardMenuOptions, customCateringOptions } from "@/components/PassengerWeightForm";
+import { DiningSelection, standardMenuOptions, CUSTOM_CATERING_PRICE } from "@/components/PassengerWeightForm";
 
 interface BookingData {
   pickup_location: string;
@@ -205,15 +205,16 @@ const ReviewAndPay = () => {
                               </div>
                             );
                           })}
-                          {selection.type === "custom" && selection.customOptions?.map(optId => {
-                            const option = customCateringOptions.find(opt => opt.id === optId);
-                            if (!option) return null;
-                            return (
-                              <div key={optId} className="ml-4 text-muted-foreground">
-                                • Custom Catering: {option.name}
-                              </div>
-                            );
-                          })}
+                          {selection.type === "custom" && (
+                            <div className="ml-4 text-muted-foreground">
+                              • Custom Catering ($50 flat rate)
+                              {selection.customOptions && selection.customOptions.length > 0 && (
+                                <div className="ml-4 text-xs">
+                                  Dietary requirements: {selection.customOptions.join(", ")}
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
