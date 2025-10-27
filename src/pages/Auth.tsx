@@ -23,7 +23,6 @@ const Auth = () => {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupFullName, setSignupFullName] = useState("");
-  const [signupPhone, setSignupPhone] = useState("");
 
   // Check if user is already logged in
   useEffect(() => {
@@ -86,7 +85,6 @@ const Auth = () => {
           emailRedirectTo: redirectUrl,
           data: {
             full_name: signupFullName,
-            phone_number: signupPhone,
           },
         },
       });
@@ -106,7 +104,6 @@ const Auth = () => {
           .from("profiles")
           .update({
             full_name: signupFullName,
-            phone_number: signupPhone,
           })
           .eq("id", data.user!.id);
 
@@ -184,8 +181,8 @@ const Auth = () => {
             </TabsContent>
 
             <TabsContent value="signup" className="flex-1 overflow-y-auto">
-              <form onSubmit={handleSignup} className="space-y-4">
-              <div className="space-y-2">
+              <form onSubmit={handleSignup} className="space-y-3">
+              <div className="space-y-1">
                 <Label htmlFor="signup-name">Full Name</Label>
                 <Input
                   id="signup-name"
@@ -197,18 +194,7 @@ const Auth = () => {
                   disabled={isLoading}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-phone">Phone Number (Optional)</Label>
-                <Input
-                  id="signup-phone"
-                  type="tel"
-                  placeholder="+1 (555) 000-0000"
-                  value={signupPhone}
-                  onChange={(e) => setSignupPhone(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label htmlFor="signup-email">Email</Label>
                 <Input
                   id="signup-email"
@@ -220,7 +206,7 @@ const Auth = () => {
                   disabled={isLoading}
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label htmlFor="signup-password">Password</Label>
                 <Input
                   id="signup-password"
