@@ -100,36 +100,51 @@ export const ScheduleSelector = ({
         </Popover>
         
         
-        <div className="flex gap-2">
-          <Select value={hours} onValueChange={(value) => handleTimeChange('hour', value)}>
-            <SelectTrigger className="h-12 bg-card flex-1">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                <SelectValue placeholder="Hour" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {hourOptions.map((hour) => (
-                <SelectItem key={hour} value={hour}>
-                  {hour}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Select value={minutes} onValueChange={(value) => handleTimeChange('minute', value)}>
-            <SelectTrigger className="h-12 bg-card flex-1">
-              <SelectValue placeholder="Min" />
-            </SelectTrigger>
-            <SelectContent>
-              {minuteOptions.map((minute) => (
-                <SelectItem key={minute} value={minute}>
-                  {minute}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal h-12 bg-card",
+                !selectedTime && "text-muted-foreground"
+              )}
+            >
+              <Clock className="mr-2 h-4 w-4" />
+              {selectedTime ? selectedTime : <span>Pick a time</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-4" align="start">
+            <div className="flex gap-2">
+              <Select value={hours} onValueChange={(value) => handleTimeChange('hour', value)}>
+                <SelectTrigger className="w-20">
+                  <SelectValue placeholder="HH" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hourOptions.map((hour) => (
+                    <SelectItem key={hour} value={hour}>
+                      {hour}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <span className="flex items-center">:</span>
+              
+              <Select value={minutes} onValueChange={(value) => handleTimeChange('minute', value)}>
+                <SelectTrigger className="w-20">
+                  <SelectValue placeholder="MM" />
+                </SelectTrigger>
+                <SelectContent>
+                  {minuteOptions.map((minute) => (
+                    <SelectItem key={minute} value={minute}>
+                      {minute}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
