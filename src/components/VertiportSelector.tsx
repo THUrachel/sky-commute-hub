@@ -301,7 +301,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
                       className={`pl-3 ${isSelected ? 'opacity-40 cursor-not-allowed' : ''}`}
                       disabled={isSelected}
                     >
-                      {vertiport.name} ({vertiport.city}, {vertiport.state})
+                      {vertiport.name}
                     </SelectItem>
                   );
                 })}
