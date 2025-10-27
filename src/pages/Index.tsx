@@ -26,8 +26,7 @@ const Index = () => {
   const [destination, setDestination] = useState("");
   const [destinationZipcode, setDestinationZipcode] = useState("");
   const [rideType, setRideType] = useState<"on-demand" | "scheduled">("on-demand");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const [datetime, setDateTime] = useState("");
   const [passengerCount, setPassengerCount] = useState(1);
   const [passengerWeights, setPassengerWeights] = useState<string[]>(["150"]);
   const [luggageWeights, setLuggageWeights] = useState<string[]>(["25"]);
@@ -186,7 +185,7 @@ const Index = () => {
       toast.error("Please enter pickup and destination locations");
       return;
     }
-    if (rideType === "scheduled" && (!date || !time)) {
+    if (rideType === "scheduled" && !datetime) {
       toast.error("Please select date and time for scheduled flight");
       return;
     }
@@ -195,12 +194,21 @@ const Index = () => {
     const { flightCost: calculatedFlightCost, groundTransport: groundTransportCost, dining: diningCost } = costs;
     const totalCost = calculatedFlightCost + groundTransportCost + diningCost;
     
+    // Split datetime into date and time for storage
+    let scheduledDate = null;
+    let scheduledTime = null;
+    if (rideType === "scheduled" && datetime) {
+      const [datePart, timePart] = datetime.split("T");
+      scheduledDate = datePart;
+      scheduledTime = timePart;
+    }
+    
     const bookingData = {
       pickup_location: pickup,
       destination: destination,
       ride_type: rideType,
-      scheduled_date: rideType === "scheduled" ? date : null,
-      scheduled_time: rideType === "scheduled" ? time : null,
+      scheduled_date: scheduledDate,
+      scheduled_time: scheduledTime,
       passenger_count: passengerCount,
       passenger_weights: passengerWeights,
       luggage_weights: luggageWeights,
@@ -386,10 +394,8 @@ const Index = () => {
 
               {rideType === "scheduled" && (
                 <ScheduleSelector
-                  date={date}
-                  onDateChange={setDate}
-                  time={time}
-                  onTimeChange={setTime}
+                  datetime={datetime}
+                  onDateTimeChange={setDateTime}
                 />
               )}
 
