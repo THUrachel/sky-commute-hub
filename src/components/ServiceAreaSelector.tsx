@@ -41,25 +41,20 @@ export const ServiceAreaSelector = ({ value, onChange }: ServiceAreaSelectorProp
   }, []);
 
   return (
-    <div className="flex items-center gap-3 p-4 rounded-lg border-2 border-accent/50 bg-accent/5 shadow-sm transition-all hover:border-accent">
-      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-accent/10">
-        <Globe className="h-6 w-6 text-accent" />
-      </div>
-      <div className="flex-1">
-        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Service Area</Label>
-        <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-11 w-full min-w-[240px] bg-background border-2 border-accent/30 focus:border-accent transition-colors font-semibold text-base">
-            <SelectValue placeholder="Select service area" />
-          </SelectTrigger>
-          <SelectContent className="z-50 bg-popover">
-            {serviceAreas.map((area) => (
-              <SelectItem key={area} value={area} className="font-medium">
-                {area}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="flex items-center gap-2 p-2 rounded-lg border-2 border-accent/50 bg-accent/5 transition-all hover:border-accent">
+      <Globe className="h-4 w-4 text-accent" />
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="h-9 w-[200px] bg-background border-2 border-accent/30 focus:border-accent transition-colors font-semibold">
+          <SelectValue placeholder="Select service area" />
+        </SelectTrigger>
+        <SelectContent className="z-50 bg-popover">
+          {serviceAreas.map((area) => (
+            <SelectItem key={area} value={area} className="font-medium">
+              {area}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
