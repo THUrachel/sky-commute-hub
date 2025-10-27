@@ -48,12 +48,22 @@ export const PassengerWeightForm = ({
   onDiningSelectionsChange,
 }: PassengerWeightFormProps) => {
   const updatePassengerWeight = (index: number, value: string) => {
+    const numValue = Number(value);
+    if (value && numValue > 256) {
+      toast.error("Passenger weight cannot exceed 256 lbs");
+      return;
+    }
     const newWeights = [...passengerWeights];
     newWeights[index] = value;
     onPassengerWeightsChange(newWeights);
   };
 
   const updateLuggageWeight = (index: number, value: string) => {
+    const numValue = Number(value);
+    if (value && numValue > 50) {
+      toast.error("Luggage weight cannot exceed 50 lbs");
+      return;
+    }
     const newWeights = [...luggageWeights];
     newWeights[index] = value;
     onLuggageWeightsChange(newWeights);
@@ -156,6 +166,8 @@ export const PassengerWeightForm = ({
                 <div className="flex items-center gap-2 max-w-[140px]">
                   <Input
                     type="number"
+                    min="0"
+                    max="256"
                     value={passengerWeights[index] || ""}
                     onChange={(e) => updatePassengerWeight(index, e.target.value)}
                     placeholder="150"
@@ -172,6 +184,8 @@ export const PassengerWeightForm = ({
                 <div className="flex items-center gap-2 max-w-[140px]">
                   <Input
                     type="number"
+                    min="0"
+                    max="50"
                     value={luggageWeights[index] || ""}
                     onChange={(e) => updateLuggageWeight(index, e.target.value)}
                     placeholder="25"
