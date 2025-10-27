@@ -249,7 +249,7 @@ export const VertiportSelector = ({ label, value, onChange, zipcode, onZipcodeCh
       <div className="ml-6 space-y-3">
         <div>
           <Label htmlFor="zipcode" className="text-xs text-muted-foreground mb-1.5 block">
-            Enter a Zipcode inside the Service Area
+            Please Enter a Zipcode
           </Label>
           <Input
             id="zipcode"
